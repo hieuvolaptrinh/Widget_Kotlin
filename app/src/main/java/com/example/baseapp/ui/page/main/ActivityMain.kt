@@ -51,6 +51,9 @@ class ActivityMain : BaseActivity<ActivityMainBinding>() {
 
     override fun initAction() {
         binding.cardPreview.setOnClickListener {
+            // Save background URL before pinning so the widget can load it
+            saveWidgetBackgroundUrl()
+
             val appWidgetManager = AppWidgetManager.getInstance(this)
             val provider = ComponentName(this, WidgetPackProvider::class.java)
             if (appWidgetManager.isRequestPinAppWidgetSupported) {
@@ -86,6 +89,8 @@ class ActivityMain : BaseActivity<ActivityMainBinding>() {
                 is Resource.Success -> {
                     currentPack = result.data
                     Log.d("WidgetPack", "Success: name=${result.data.name}, widgets=${result.data.widgets.size}")
+                    // Save background URL immediately so it's ready when widget is pinned
+                    saveWidgetBackgroundUrl()
                     previewWidgetPack()
                 }
             }
@@ -117,5 +122,30 @@ class ActivityMain : BaseActivity<ActivityMainBinding>() {
 
         binding.batteryProgress.progress = percent
         binding.batteryPercent.text = "$percent%"
+    }
+
+    /**
+     * Get the best available background URL from the current widget pack and save it
+     * to SharedPreferences so the widget provider can load it.
+     */
+    private fun saveWidgetBackgroundUrl() {
+        val pack = currentPack ?: return
+
+        // Try to get backgroundUrl from the first widget's imageUrl list
+        val bgUrl = pack.widgets.firstOrNull()?.imageUrl?.firstOrNull()?.backgroundUrl
+            ?.takeIf { it.isNotBlank() }
+        // Fallback to previewUrl of the first widget
+            ?: pack.widgets.firstOrNull()?.previewUrl?.takeIf { it.isNotBlank() }
+        // Fallback to pack-level background
+            ?: pack.background.takeIf { it.isNotBlank() }
+        // Fallback to pack preview
+            ?: pack.preview.takeIf { it.isNotBlank() }
+
+        if (bgUrl != null) {
+            Log.d("WidgetPack", "Saving widget background URL: $bgUrl")
+            WidgetPackProvider.saveBackgroundUrl(this, bgUrl)
+        } else {
+            Log.w("WidgetPack", "No background URL found in widget pack")
+        }
     }
 }

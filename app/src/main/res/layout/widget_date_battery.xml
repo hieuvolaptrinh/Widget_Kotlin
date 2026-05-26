@@ -1,87 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/widgetRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white">
 
-    <FrameLayout
-        android:id="@+id/batteryBody"
-        android:layout_width="48dp"
-        android:layout_height="22dp"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="12dp"
-        android:background="@drawable/battery_outline"
-        android:padding="2dp">
+    <ImageView
+        android:id="@+id/imgWidgetBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:contentDescription="@null" />
 
-        <ProgressBar
-            android:id="@+id/batteryProgress"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:indeterminate="false"
-            android:max="100"
-            android:progress="80"
-            android:progressDrawable="@drawable/battery_progress" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/batteryPercent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="80%"
-            android:textColor="#000000"
-            android:textSize="10sp"
-            android:textStyle="bold" />
-    </FrameLayout>
+        <FrameLayout
+            android:id="@+id/batteryBody"
+            android:layout_width="48dp"
+            android:layout_height="22dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="12dp"
+            android:background="@drawable/battery_outline"
+            android:padding="2dp">
 
-    <TextView
-        android:id="@+id/batteryCap"
-        android:layout_width="4dp"
-        android:layout_height="10dp"
-        android:layout_alignTop="@id/batteryBody"
-        android:layout_alignBottom="@id/batteryBody"
-        android:layout_toEndOf="@id/batteryBody"
-        android:layout_marginStart="2dp"
-        android:background="@drawable/battery_cap"
-        android:text="" />
+            <ProgressBar
+                android:id="@+id/batteryProgress"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:indeterminate="false"
+                android:max="100"
+                android:progress="80"
+                android:progressDrawable="@drawable/battery_progress" />
 
-    <LinearLayout
-        android:id="@+id/textContainer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:orientation="vertical">
+            <TextView
+                android:id="@+id/batteryPercent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="80%"
+                android:textColor="#FF0000"
+                android:textSize="10sp"
+                android:textStyle="bold" />
+        </FrameLayout>
 
         <TextView
-            android:id="@+id/tvTime"
+            android:id="@+id/batteryCap"
+            android:layout_width="4dp"
+            android:layout_height="10dp"
+            android:layout_alignTop="@id/batteryBody"
+            android:layout_alignBottom="@id/batteryBody"
+            android:layout_marginStart="2dp"
+            android:layout_toEndOf="@id/batteryBody"
+            android:background="@drawable/battery_cap"
+            android:text="" />
+
+        <LinearLayout
+            android:id="@+id/textContainer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="11:58"
-            android:textColor="#000000"
-            android:textSize="50dp"
-            android:textStyle="bold" />
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/tvWeekDay"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Wednesday"
-            android:textColor="#000000"
-            android:textSize="40dp"
-            android:textStyle="bold" />
+            <TextView
+                android:id="@+id/tvTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="11:58"
+                android:textColor="#000000"
+                android:textSize="50dp"
+                android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/tvMonthDay"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="March 9"
-            android:textColor="#000000"
-            android:textSize="20dp"
-            android:textStyle="bold" />
-    </LinearLayout>
+            <TextView
+                android:id="@+id/tvWeekDay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Wednesday"
+                android:textColor="#000000"
+                android:textSize="40dp"
+                android:textStyle="bold" />
 
-</RelativeLayout>
+            <TextView
+                android:id="@+id/tvMonthDay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="March 9"
+                android:textColor="#000000"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</FrameLayout>

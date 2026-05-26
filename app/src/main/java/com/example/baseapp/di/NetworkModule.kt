@@ -1,6 +1,8 @@
 package com.example.baseapp.di
 
 import com.example.baseapp.BuildConfig
+import com.example.baseapp.data.remote.api.APICoin
+import com.example.baseapp.data.remote.api.APIWidget
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -40,6 +42,18 @@ object NetworkModule {
             .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideApiWidget(retrofit: Retrofit): APIWidget {
+        return retrofit.create(APIWidget::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideApiCoin(retrofit: Retrofit): APICoin {
+        return retrofit.create(APICoin::class.java)
     }
 
 

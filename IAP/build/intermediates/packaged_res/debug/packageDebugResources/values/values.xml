@@ -4,7 +4,7 @@
     <color name="black">#000000</color>
     <color name="color_card_detail_info">@color/primary_600</color>
     <color name="color_main_button">@color/primary_100</color>
-    <color name="color_text_home">@color/black</color>
+    <color name="color_text_home">#000000</color>
     <color name="container_1">#FBFBFB</color>
     <color name="container_2">#EFF6F9</color>
     <color name="dialogColor">@color/primary_100</color>

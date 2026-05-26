@@ -1,6 +1,7 @@
 package com.example.baseapp.utils
 
 import android.util.Log
+import com.example.baseapp.BuildConfig
 import com.example.baseapp.MyApplication
 import java.io.File
 import java.io.FileOutputStream

@@ -100,7 +100,7 @@
                                 <TextView
                                     android:id="@+id/primary"
                                     android:textStyle="bold"
-                                    android:textColor="@color/black"
+                                    android:textColor="#000000"
                                     android:lines="1"
                                     android:background="@color/neutral_disable"
                                     android:layout_height="wrap_content"
@@ -132,7 +132,7 @@
                                     android:layout_height="match_parent"
                                     android:gravity="top"
                                     android:textSize="@dimen/gnt_text_size_small"
-                                    android:textColor="@color/black"
+                                    android:textColor="#000000"
                                     android:lines="1"
                                     android:layout_marginTop="@dimen/gnt_no_margin"
                                     android:layout_marginBottom="@dimen/gnt_no_margin"

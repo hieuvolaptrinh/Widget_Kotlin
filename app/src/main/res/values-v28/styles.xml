@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--   Typography -->
+    <style name="headline_sb">
+        <item name="fontFamily">@font/inter_semi_bold</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="android:lineHeight">34dp</item>
+    </style>
+
+    <style name="headline_small_sb">
+        <item name="fontFamily">@font/inter_semi_bold</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:letterSpacing">0.001</item>
+        <item name="android:lineHeight">28dp</item>
+    </style>
+
+    <style name="title_bold">
+        <item name="fontFamily">@font/inter_bold</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:letterSpacing">0.001</item>
+        <item name="android:lineHeight">26dp</item>
+    </style>
+
+    <style name="title_sb">
+        <item name="fontFamily">@font/inter_semi_bold</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:letterSpacing">0.001</item>
+        <item name="android:lineHeight">26dp</item>
+    </style>
+
+    <style name="body_sb">
+        <item name="fontFamily">@font/inter_semi_bold</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:letterSpacing">0.001</item>
+        <item name="android:lineHeight">22dp</item>
+    </style>
+
+    <style name="body_medium">
+        <item name="fontFamily">@font/inter_medium</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:letterSpacing">0.001</item>
+        <item name="android:lineHeight">22dp</item>
+    </style>
+
+    <style name="body_regular">
+        <item name="fontFamily">@font/inter_regular</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:letterSpacing">0.0025</item>
+        <item name="android:lineHeight">22dp</item>
+    </style>
+
+    <style name="caption_sb">
+        <item name="fontFamily">@font/inter_semi_bold</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:letterSpacing">0.005</item>
+        <item name="android:lineHeight">20dp</item>
+    </style>
+
+    <style name="caption_medium">
+        <item name="fontFamily">@font/inter_medium</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:letterSpacing">0.005</item>
+        <item name="android:lineHeight">20dp</item>
+    </style>
+
+    <style name="caption_regular">
+        <item name="fontFamily">@font/inter_regular</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="android:lineHeight">20dp</item>
+    </style>
+
+    <style name="footnote_sb">
+        <item name="fontFamily">@font/inter_semi_bold</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="android:lineHeight">16dp</item>
+    </style>
+
+    <style name="footnote_regular">
+        <item name="fontFamily">@font/inter_regular</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="android:lineHeight">16dp</item>
+    </style>
+</resources>

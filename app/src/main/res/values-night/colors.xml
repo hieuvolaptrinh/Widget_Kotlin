@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--   Neutral Color -->
+    <color name="neutral_secondary">#CBD5E1</color>
+    <color name="neutral_disable">#64748B</color>
+    <color name="neutral_divider">#334155</color>
+
+    <!--   Surface Color -->
+    <color name="surface">#1E293B</color>
+    <color name="elevated">#273449</color>
+    <color name="background">#0F172A</color>
+
+    <!--   Text Color -->
+    <color name="text_primary">#FFFFFF</color>
+</resources>

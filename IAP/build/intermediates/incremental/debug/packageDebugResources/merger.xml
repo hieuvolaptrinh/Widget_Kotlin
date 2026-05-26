@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="3"><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="main$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="F:\dtp_android_plantid\IAP\src\main\res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="main" generated-set="main$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="F:\dtp_android_plantid\IAP\src\main\res"><file name="bg_ad_logo" path="F:\dtp_android_plantid\IAP\src\main\res\drawable\bg_ad_logo.xml" qualifiers="" type="drawable"/><file name="bg_ad_native_logo_gray" path="F:\dtp_android_plantid\IAP\src\main\res\drawable\bg_ad_native_logo_gray.xml" qualifiers="" type="drawable"/><file name="bg_ad_noti_2" path="F:\dtp_android_plantid\IAP\src\main\res\drawable\bg_ad_noti_2.xml" qualifiers="" type="drawable"/><file name="bg_ad_noti_second40_2" path="F:\dtp_android_plantid\IAP\src\main\res\drawable\bg_ad_noti_second40_2.xml" qualifiers="" type="drawable"/><file name="bg_ad_noti_stroke_primary" path="F:\dtp_android_plantid\IAP\src\main\res\drawable\bg_ad_noti_stroke_primary.xml" qualifiers="" type="drawable"/><file name="bg_btn_cta_blue" path="F:\dtp_android_plantid\IAP\src\main\res\drawable\bg_btn_cta_blue.xml" qualifiers="" type="drawable"/><file name="bg_native_ad" path="F:\dtp_android_plantid\IAP\src\main\res\drawable\bg_native_ad.xml" qualifiers="" type="drawable"/><file name="bg_native_button" path="F:\dtp_android_plantid\IAP\src\main\res\drawable\bg_native_button.xml" qualifiers="" type="drawable"/><file name="bg_noti_ad_onboarding" path="F:\dtp_android_plantid\IAP\src\main\res\drawable\bg_noti_ad_onboarding.xml" qualifiers="" type="drawable"/><file name="inter_bold" path="F:\dtp_android_plantid\IAP\src\main\res\font\inter_bold.ttf" qualifiers="" type="font"/><file name="inter_medium" path="F:\dtp_android_plantid\IAP\src\main\res\font\inter_medium.ttf" qualifiers="" type="font"/><file name="inter_regular" path="F:\dtp_android_plantid\IAP\src\main\res\font\inter_regular.ttf" qualifiers="" type="font"/><file name="inter_semibold" path="F:\dtp_android_plantid\IAP\src\main\res\font\inter_semibold.ttf" qualifiers="" type="font"/><file name="gnt_medium_main" path="F:\dtp_android_plantid\IAP\src\main\res\layout\gnt_medium_main.xml" qualifiers="" type="layout"/><file name="gnt_medium_main_data" path="F:\dtp_android_plantid\IAP\src\main\res\layout\gnt_medium_main_data.xml" qualifiers="" type="layout"/><file name="gnt_medium_main_placeholder" path="F:\dtp_android_plantid\IAP\src\main\res\layout\gnt_medium_main_placeholder.xml" qualifiers="" type="layout"/><file name="gnt_small_main" path="F:\dtp_android_plantid\IAP\src\main\res\layout\gnt_small_main.xml" qualifiers="" type="layout"/><file name="gnt_small_onboarding" path="F:\dtp_android_plantid\IAP\src\main\res\layout\gnt_small_onboarding.xml" qualifiers="" type="layout"/><file name="gnt_small_onboarding_data" path="F:\dtp_android_plantid\IAP\src\main\res\layout\gnt_small_onboarding_data.xml" qualifiers="" type="layout"/><file name="gnt_small_onboarding_placeholder" path="F:\dtp_android_plantid\IAP\src\main\res\layout\gnt_small_onboarding_placeholder.xml" qualifiers="" type="layout"/><file name="layout_banner_ads" path="F:\dtp_android_plantid\IAP\src\main\res\layout\layout_banner_ads.xml" qualifiers="" type="layout"/><file name="layout_banner_data" path="F:\dtp_android_plantid\IAP\src\main\res\layout\layout_banner_data.xml" qualifiers="" type="layout"/><file name="layout_banner_placeholder" path="F:\dtp_android_plantid\IAP\src\main\res\layout\layout_banner_placeholder.xml" qualifiers="" type="layout"/><file name="layout_progress" path="F:\dtp_android_plantid\IAP\src\main\res\layout\layout_progress.xml" qualifiers="" type="layout"/><file name="my_gnt_small_main_items" path="F:\dtp_android_plantid\IAP\src\main\res\layout\my_gnt_small_main_items.xml" qualifiers="" type="layout"/><file name="my_gnt_small_main_placeholder" path="F:\dtp_android_plantid\IAP\src\main\res\layout\my_gnt_small_main_placeholder.xml" qualifiers="" type="layout"/><file path="F:\dtp_android_plantid\IAP\src\main\res\values\attrs.xml" qualifiers=""><declare-styleable name="AspectRatioFrameLayout">
+        <attr format="string" name="ratio"/>
+    </declare-styleable><declare-styleable name="TemplateView">
+        <attr format="reference" name="gnt_template_type"/>
+        <attr format="enum" name="inScreenNative">
+            <enum name="language" value="0"/>
+            <enum name="onboarding" value="1"/>
+        </attr>
+    </declare-styleable><declare-styleable name="BannerCollapseView">
+        <attr format="enum" name="inScreenBannerCollapse">
+        </attr>
+    </declare-styleable><declare-styleable name="BannerView">
+        <attr format="enum" name="inScreenBanner">
+            <enum name="camera" value="0"/>
+            <enum name="scan_fail" value="1"/>
+            <enum name="scanning" value="2"/>
+            <enum name="coin_info" value="3"/>
+        </attr>
+    </declare-styleable></file><file path="F:\dtp_android_plantid\IAP\src\main\res\values\colors.xml" qualifiers=""><color name="primary_900">#0B4213</color><color name="primary_800">#0C6119</color><color name="primary_600">#20AE35</color><color name="primary_300">#99CCA0</color><color name="primary_100">#E7F3E9</color><color name="transparent_primary_600">#2620AE35</color><color name="secondary_900">#6B4F1B</color><color name="secondary_700">#B8762E</color><color name="secondary_500">#FFBC41</color><color name="secondary_300">#FFD280</color><color name="secondary_100">#FFEAC4</color><color name="transparent">#00000000</color><color name="transparent_overlay_50">#50000000</color><color name="transparent_overlay_20">#20808080</color><color name="primary_overlay_30">#4D3BCD51</color><color name="status_green">#2EBD85</color><color name="status_red">#F44336</color><color name="status_yellow">#FDCE42</color><color name="neutral_disable">#BCBDC2</color><color name="neutral_divider">#DCE1E4</color><color name="neutral">#ADADAF</color><color name="text_on_primary">#FFFFFF</color><color name="text_primary">#000000</color><color name="text_grey">#727578</color><color name="text_blue">#839AAD</color><color name="screen">#E9F3EC</color><color name="container_1">#FBFBFB</color><color name="container_2">#EFF6F9</color><color name="white">#FFFFFF</color><color name="black">#000000</color><color name="linear_green">#20AE35</color><color name="surface">@color/container_1</color><color name="elevated">@color/container_1</color><color name="background">@color/screen</color><color name="dialogColor">@color/primary_100</color></file><file path="F:\dtp_android_plantid\IAP\src\main\res\values\dimens.xml" qualifiers=""><dimen name="elevation_shadow">4dp</dimen><dimen name="height_top_app_bar">64dp</dimen><dimen name="height_function_tab">150dp</dimen><dimen name="height_button_smaller">40dp</dimen><dimen name="height_button_bigger">48dp</dimen><dimen name="height_item_normal">72dp</dimen><dimen name="height_illustration_function_tab">100dp</dimen><dimen name="radius_main_button">8dp</dimen><dimen name="radius_card_detail_info">12dp</dimen><dimen name="margin_4">4dp</dimen><dimen name="margin_8">8dp</dimen><dimen name="margin_16">16dp</dimen><dimen name="margin_24">24dp</dimen><dimen name="margin_32">32dp</dimen><dimen name="margin_20">20dp</dimen><dimen name="size_icon_md">30dp</dimen><dimen name="size_icon_sm">24dp</dimen><dimen name="size_item_slide">120dp</dimen><color name="color_text_home">@color/black</color><color name="color_main_button">@color/primary_100</color><color name="color_card_detail_info">@color/primary_600</color><dimen name="gnt_ad_indicator_text_size">12sp</dimen><dimen name="gnt_no_size">0dp</dimen><dimen name="gnt_no_margin">0dp</dimen><dimen name="gnt_text_size_small">14sp</dimen><dimen name="top_app_bar_height">64dp</dimen><dimen name="fab_margin">16dp</dimen><dimen name="dialog_width">348dp</dimen><dimen name="progress_bar_width">48dp</dimen><dimen name="progress_bar_height">48dp</dimen><dimen name="button_height">40dp</dimen><dimen name="app_icon_size">42dp</dimen><dimen name="crop_time_view_height">56dp</dimen><dimen name="item_square_sm">48dp</dimen><dimen name="item_font_size">40dp</dimen><dimen name="item_font_padding">42dp</dimen><item format="float" name="gnt_medium_template_bottom_weight" type="dimen">0.4</item><item format="float" name="gnt_text_row_weight" type="dimen">0.25</item><item format="float" name="gnt_media_view_weight" type="dimen">1.0</item><item format="float" name="gnt_medium_template_top_weight" type="dimen">0.2</item><dimen name="gnt_default_margin">10dp</dimen><dimen name="gnt_small_margin">5dp</dimen><dimen name="gnt_text_size_large">15sp</dimen><dimen name="gnt_ad_indicator_width">25dp</dimen><dimen name="gnt_ad_indicator_height">20dp</dimen><dimen name="gnt_ad_indicator_bar_height">30dp</dimen><dimen name="gnt_ad_indicator_top_margin">0dp</dimen><dimen name="gnt_ad_indicator_bottom_margin">10dp</dimen><dimen name="gnt_small_cta_button_height">30dp</dimen><dimen name="gnt_medium_cta_button_height">50dp</dimen></file><file path="F:\dtp_android_plantid\IAP\src\main\res\values\strings.xml" qualifiers=""><string name="license_key_play_console"/></file><file path="F:\dtp_android_plantid\IAP\src\main\res\values\styles.xml" qualifiers=""><style name="heading_semibold">
+        <item name="android:textSize">22sp</item>
+        <item name="lineHeight">28sp</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="android:fontFamily">@font/inter_semibold</item>
+    </style><style name="heading_medium">
+        <item name="android:textSize">22sp</item>
+        <item name="lineHeight">28sp</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="android:fontFamily">@font/inter_medium</item>
+    </style><style name="big_title_bold">
+        <item name="android:textSize">18sp</item>
+        <item name="lineHeight">25sp</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="android:fontFamily">@font/inter_bold</item>
+    </style><style name="title_bold">
+        <item name="android:textSize">16sp</item>
+        <item name="lineHeight">20sp</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="android:fontFamily">@font/inter_bold</item>
+    </style><style name="title_semibold">
+        <item name="android:textSize">16sp</item>
+        <item name="lineHeight">20sp</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="android:fontFamily">@font/inter_semibold</item>
+    </style><style name="title_regular">
+        <item name="android:textSize">16sp</item>
+        <item name="lineHeight">20sp</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="android:fontFamily">@font/inter_regular</item>
+    </style><style name="body_semibold">
+        <item name="android:textSize">14sp</item>
+        <item name="lineHeight">20sp</item>
+        <item name="android:letterSpacing">0.1</item>
+        <item name="android:fontFamily">@font/inter_semibold</item>
+    </style><style name="body_medium">
+        <item name="android:textSize">14sp</item>
+        <item name="lineHeight">16sp</item>
+        <item name="android:letterSpacing">0.01</item>
+        <item name="android:fontFamily">@font/inter_medium</item>
+    </style><style name="body_regular">
+        <item name="android:textSize">14sp</item>
+        <item name="lineHeight">16sp</item>
+        <item name="android:letterSpacing">0.005</item>
+        <item name="android:fontFamily">@font/inter_regular</item>
+    </style><style name="caption_medium">
+        <item name="android:textSize">12sp</item>
+        <item name="lineHeight">14sp</item>
+        <item name="android:letterSpacing">0.001</item>
+        <item name="android:fontFamily">@font/inter_medium</item>
+    </style><style name="caption_regular">
+        <item name="android:textSize">12sp</item>
+        <item name="lineHeight">14sp</item>
+        <item name="android:letterSpacing">0.001</item>
+        <item name="android:fontFamily">@font/inter_regular</item>
+    </style><style name="footnote_bold">
+        <item name="android:textSize">10sp</item>
+        <item name="lineHeight">12sp</item>
+        <item name="android:letterSpacing">0.001</item>
+        <item name="android:fontFamily">@font/inter_bold</item>
+    </style><style name="footnote_medium">
+        <item name="android:textSize">10sp</item>
+        <item name="lineHeight">12sp</item>
+        <item name="android:letterSpacing">0.001</item>
+        <item name="android:fontFamily">@font/inter_medium</item>
+    </style></file></source></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="debug$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="F:\dtp_android_plantid\IAP\src\debug\res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="debug" generated-set="debug$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="F:\dtp_android_plantid\IAP\src\debug\res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="generated$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="F:\dtp_android_plantid\IAP\build\generated\res\resValues\debug"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="generated" generated-set="generated$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="F:\dtp_android_plantid\IAP\build\generated\res\resValues\debug"/></dataSet><mergedItems><configuration qualifiers=""><declare-styleable name="AspectRatioFrameLayout">
+        <attr format="string" name="ratio"/>
+    </declare-styleable><declare-styleable name="BannerCollapseView">
+        <attr format="enum" name="inScreenBannerCollapse">
+        </attr>
+    </declare-styleable><declare-styleable name="BannerView">
+        <attr format="enum" name="inScreenBanner">
+            <enum name="camera" value="0"/>
+            <enum name="scan_fail" value="1"/>
+            <enum name="scanning" value="2"/>
+            <enum name="coin_info" value="3"/>
+        </attr>
+    </declare-styleable><declare-styleable name="TemplateView">
+        <attr format="reference" name="gnt_template_type"/>
+        <attr format="enum" name="inScreenNative">
+            <enum name="language" value="0"/>
+            <enum name="onboarding" value="1"/>
+        </attr>
+    </declare-styleable></configuration></mergedItems></merger>

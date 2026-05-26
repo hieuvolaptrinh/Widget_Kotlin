@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--   Text Color -->
+    <color name="text_primary">#000000</color>
+    <color name="text_on_primary">#FFFFFF</color>
+
+    <!--   Surface Color -->
+    <color name="surface">#FFFFFF</color>
+    <color name="elevated">#FFFFFF</color>
+    <color name="background">#F8F5EE</color>
+
+    <!--   System Color -->
+    <color name="primary_100">#F59E0B</color>
+    <color name="primary_25">#25F59E0B</color>
+    <color name="primary_14">#14F59E0B</color>
+
+    <color name="word_highlight_background">#FFC107</color>
+    <color name="word_highlight_text">#DC2626</color>
+
+    <!--    <color name="secondary_100">#191919</color>-->
+    <!--    <color name="secondary_70">#5E5E5E</color>-->
+    <!--    <color name="secondary_disable">#8C8C8C</color>-->
+    <!--    <color name="secondary_30">#BABABA</color>-->
+    <!--    <color name="secondary_divider">#E8E8E8</color>-->
+    <!--    <color name="transparent_overlay">#40121212</color>-->
+
+    <!--   Transparent Color -->
+    <color name="transparent_overlay_12">#12767680</color>
+    <color name="transparent_overlay_50">#50141516</color>
+    <color name="black">#000000</color>
+    <color name="white">#ffffff</color>
+
+    <!--   Neutral Color -->
+    <color name="neutral_secondary">#4B5563</color>
+    <color name="neutral_disable">#9CA3AF</color>
+    <color name="neutral_divider">#E5E7EB</color>
+
+    <!--   Status Color -->
+    <color name="status_green">#16A34A</color>
+    <color name="status_red">#DC2626</color>
+    <color name="status_yellow">#FFCA2E</color>
+    <color name="status_info">#2563EB</color>
+
+
+    <!--   Other -->
+    <color name="bg_color">#ff767575</color>
+    <color name="bg_colors">#ff565656</color>
+    <color name="black1">#ff1f1f1f</color>
+    <color name="black2">#ff272b34</color>
+    <color name="black_transparent">#4b000000</color>
+    <color name="blue">#5749f7</color>
+
+    <color name="cardview_dark_background">#ff424242</color>
+    <color name="cardview_light_background">#ffffffff</color>
+    <color name="cardview_shadow_end_color">#03000000</color>
+    <color name="cardview_shadow_start_color">#37000000</color>
+    <color name="colorAccent">@color/primary_100</color>
+    <color name="colorPrimary">#00FFFF</color>
+    <color name="colorPrimaryDark">#7367fa</color>
+    <color name="colorTextLibBackground">#ffffffff</color>
+    <color name="colorTextLibBlack">#ff000000</color>
+    <color name="colorTextLibSelected">#ffffffff</color>
+    <color name="colorTextLibTheme">#ff658c86</color>
+    <color name="colorTextLibWhite">#ffffffff</color>
+    <color name="colorTheme">#ff272b34</color>
+    <color name="color_background">#ff917f97</color>
+    <color name="color_black">#ff000000</color>
+    <color name="color_selected">#ff620b80</color>
+    <color name="color_theme">#ffac72bf</color>
+    <color name="color_white">#ffffffff</color>
+    <color name="colorback">#ffd9d9d9</color>
+    <color name="colormediam">#282A2C</color>
+
+    <color name="dialogColor">#00FFFF</color>
+
+    <color name="gray">#ff848484</color>
+    <color name="green">#ff67bf60</color>
+    <color name="green1">#ff30ce00</color>
+
+
+    <color name="psts_background_tab_pressed">#1affffff</color>
+    <color name="psts_background_tab_pressed_ripple">#aaffffff</color>
+    <color name="red">#fff50c0c</color>
+
+    <color name="transparent">#00000000</color>
+    <color name="txtColor">#ff69e000</color>
+    <color name="yellow">#ffffb400</color>
+
+    <!--    Basic-->
+    <color name="black_100">#000000</color>
+
+</resources>

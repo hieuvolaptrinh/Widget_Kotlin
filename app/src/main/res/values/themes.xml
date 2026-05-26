@@ -1,0 +1,85 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.ListenAI" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <item name="colorPrimary">@color/primary_100</item>
+        <item name="colorAccent">@color/black</item>
+        <item name="android:windowBackground">@color/background</item>
+
+        <item name="colorControlActivated">@color/primary_100</item>
+
+        <!-- màu khi không được chọn -->
+        <item name="colorControlNormal">@color/primary_100</item>
+
+        <!-- nếu muốn pressed/disabled cũng là cam -->
+        <item name="colorControlHighlight">@color/primary_100</item>
+
+    </style>
+
+    <style name="Theme.ListenAI" parent="Base.Theme.ListenAI" />
+
+    <style name="AppTheme.SeekBar" parent="@style/Theme.ListenAI">
+        <item name="colorPrimary">@color/dialogColor</item>
+        <item name="colorPrimaryDark">@color/dialogColor</item>
+        <item name="colorAccent">@color/white</item>
+    </style>
+
+    <style name="DialogAnimation_">
+        <item name="android:windowEnterAnimation">@anim/up_slide</item>
+        <item name="android:windowExitAnimation">@anim/bottom_slide</item>
+    </style>
+
+    <style name="MyDialogTheme" parent="@style/Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:background">@color/transparent</item>
+    </style>
+
+    <style name="BottomSheetDialogTransparentTheme" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/CustomBottomSheetTransparentStyle</item>
+    </style>
+
+    <style name="CustomBottomSheetTransparentStyle" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
+    <style name="BottomSheetDialogTheme" parent="Theme.Material3.DayNight.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/CustomBottomSheet</item>
+    </style>
+
+    <style name="ShapeAppearanceOverlay.BottomSheet" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopLeft">32dp</item>
+        <item name="cornerSizeTopRight">32dp</item>
+    </style>
+
+
+    <style name="CustomBottomSheet" parent="Widget.Material3.BottomSheet">
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.BottomSheet</item>
+        <item name="backgroundTint">@color/surface</item>
+    </style>
+
+
+    <style name="MySeekBar" parent="@style/Widget.AppCompat.SeekBar" />
+
+    <style name="NoActionBar" parent="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+    </style>
+
+    <style name="StickerNoActionBar" parent="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+    </style>
+
+    <style name="CustomDatePickerDialog" parent="Theme.AppCompat.Light.Dialog">
+        <!-- Text color -->
+        <item name="android:textColorPrimary">@color/black</item>
+        <!-- Selected date color       -->
+        <item name="colorAccent">@color/primary_100</item>
+        <!-- Button OK color -->
+        <item name="colorPrimary">@color/primary_100</item>
+        <!-- Button Cancel color -->
+        <item name="colorOnPrimary">@color/primary_100</item>
+
+        <item name="expandedTitleGravity">center</item>
+    </style>
+</resources>

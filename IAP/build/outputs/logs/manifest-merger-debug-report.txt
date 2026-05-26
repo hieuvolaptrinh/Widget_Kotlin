@@ -1,0 +1,21 @@
+-- Merging decision tree log ---
+manifest
+ADDED from F:\dtp_android_plantid\IAP\src\main\AndroidManifest.xml:2:1-6:12
+INJECTED from F:\dtp_android_plantid\IAP\src\main\AndroidManifest.xml:2:1-6:12
+	package
+		ADDED from F:\dtp_android_plantid\IAP\src\main\AndroidManifest.xml:3:5-26
+		INJECTED from F:\dtp_android_plantid\IAP\src\main\AndroidManifest.xml
+	xmlns:android
+		ADDED from F:\dtp_android_plantid\IAP\src\main\AndroidManifest.xml:2:11-69
+uses-permission#android.permission.INTERNET
+ADDED from F:\dtp_android_plantid\IAP\src\main\AndroidManifest.xml:5:5-67
+	android:name
+		ADDED from F:\dtp_android_plantid\IAP\src\main\AndroidManifest.xml:5:22-64
+uses-sdk
+INJECTED from F:\dtp_android_plantid\IAP\src\main\AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from F:\dtp_android_plantid\IAP\src\main\AndroidManifest.xml
+INJECTED from F:\dtp_android_plantid\IAP\src\main\AndroidManifest.xml
+	android:targetSdkVersion
+		INJECTED from F:\dtp_android_plantid\IAP\src\main\AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from F:\dtp_android_plantid\IAP\src\main\AndroidManifest.xml

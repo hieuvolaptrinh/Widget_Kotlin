@@ -21,31 +21,6 @@
     "order": 176,
     "widgets": [
       {
-        "_id": "69e4714f9708a69fde40eb6e",
-        "name": "Date 3 Medium",
-        "previewUrl": "https://candy-storage.s3.ap-southeast-1.amazonaws.com/new-themes/pre_medium_crayon/6dc1b6bd-a9bf-4fa3-a0ff-97e76c8e0e8e.png",
-        "imageUrl": [
-          {
-            "url": "",
-            "backgroundUrl": "https://candy-storage.s3.ap-southeast-1.amazonaws.com/new-themes/bg_medium_crayon/6aed2623-1ab3-46cd-af6b-673bdfab1ece.png",
-            "avatarUrl": "",
-            "defaultAvatar": "",
-            "position": "position#1",
-            "rotation": 0,
-            "width": 1,
-            "height": 1,
-            "centerX": 0,
-            "centerY": 0,
-            "_id": "69e4714f9708a69fde40eb6e"
-          }
-        ],
-        "size": "MEDIUM",
-        "type": "date#3",
-        "font": "Borel",
-        "textColor": "#FFFFFF",
-        "contentPosition": "center"
-      },
-      {
         "_id": "69e4714f9708a69fde40eb6f",
         "name": "Image Small",
         "previewUrl": "https://candy-storage.s3.ap-southeast-1.amazonaws.com/new-themes/bg_small_crayon/c36a548f-9e61-4140-9c40-fd71845bcb2f.png",
@@ -350,3 +325,7 @@
     "updatedAt": "2026-05-31T15:57:34.039Z"
   }
 }
+Beta
+0 / 10
+used queries
+1

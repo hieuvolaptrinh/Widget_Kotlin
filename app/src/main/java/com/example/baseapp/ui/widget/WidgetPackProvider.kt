@@ -1,8 +1,8 @@
 package com.example.baseapp.ui.widget
 
+import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -14,7 +14,6 @@ import android.widget.RemoteViews
 import com.example.baseapp.R
 import com.example.baseapp.ui.page.main.ActivityMain
 import com.example.baseapp.ui.service.WidgetUpdateService
-import android.app.PendingIntent
 import java.io.File
 import java.io.FileOutputStream
 import java.net.URL
@@ -36,9 +35,7 @@ class WidgetPackProvider : AppWidgetProvider() {
     }
 
     override fun onUpdate(
-        context: Context,
-        appWidgetManager: AppWidgetManager,
-        appWidgetIds: IntArray
+        context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray
     ) {
         WidgetUpdateService.start(context)
         thread {
@@ -47,6 +44,11 @@ class WidgetPackProvider : AppWidgetProvider() {
     }
 
     companion object {
+        // để tối ưu thay đổi những gì cần thay đổi thôi không update hết
+        private var cachedViews: RemoteViews? = null
+        private var cachedBitmap: Bitmap? = null
+        private val lastStates = mutableMapOf<Int, Pair<String, Int>>()
+
         const val ACTION_PINNED = "com.example.baseapp.widget.ACTION_PINNED"
         private const val PREFS_NAME = "widget_pack_prefs"
         private const val KEY_BACKGROUND_URL = "background_url"
@@ -55,8 +57,8 @@ class WidgetPackProvider : AppWidgetProvider() {
         // ─── SharedPrefs ─────────────────────────────────────────────────────────
 
         fun saveBackgroundUrl(context: Context, url: String) {
-            context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-                .edit().putString(KEY_BACKGROUND_URL, url).apply()
+            context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit()
+                .putString(KEY_BACKGROUND_URL, url).apply()
         }
 
         private fun getBackgroundUrl(context: Context): String? =
@@ -68,9 +70,12 @@ class WidgetPackProvider : AppWidgetProvider() {
         private fun getCacheFile(context: Context) = File(context.cacheDir, BG_CACHE_FILE)
 
         private fun loadCachedBitmap(context: Context): Bitmap? {
+            if (cachedBitmap != null) return cachedBitmap
+
             val file = getCacheFile(context)
             if (!file.exists()) return null
             return BitmapFactory.decodeFile(file.absolutePath).also {
+                cachedBitmap = it
                 Log.d("Widget", if (it != null) " Loaded from cache" else " Cache decode failed")
             }
         }
@@ -86,6 +91,7 @@ class WidgetPackProvider : AppWidgetProvider() {
                     FileOutputStream(getCacheFile(context)).use { out ->
                         bitmap.compress(Bitmap.CompressFormat.PNG, 90, out)
                     }
+                    cachedBitmap = bitmap
                     Log.d("Widget", " Image downloaded & cached")
                 }
                 bitmap
@@ -98,18 +104,27 @@ class WidgetPackProvider : AppWidgetProvider() {
         // ─── Update giờ/pin (gọi từ Service mỗi phút) ────────────────────────────
 
         fun updateTimeAndBattery(
-            context: Context,
-            appWidgetManager: AppWidgetManager,
-            appWidgetId: Int
+            context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int
         ) {
-            Log.d("Widget", "updateTimeAndBattery ${getCurrentTime()}")
-            val views = RemoteViews(context.packageName, R.layout.widget_date_battery)
+            val time = getCurrentTime()
+            val battery = getBatteryPercent(context)
+            val currentState = Pair(time, battery)
 
-            views.setTextViewText(R.id.tvTime, getCurrentTime())
+            // Bỏ qua nếu không có gì thay đổi
+            if (lastStates[appWidgetId] == currentState) {
+                return
+            }
+            lastStates[appWidgetId] = currentState
+
+            val views =
+                cachedViews ?: RemoteViews(context.packageName, R.layout.widget_date_battery).also {
+                    cachedViews = it
+                }
+
+            views.setTextViewText(R.id.tvTime, time)
             views.setTextViewText(R.id.tvWeekDay, getCurrentDay())
             views.setTextViewText(R.id.tvMonthDay, getCurrentMonthDay())
 
-            val battery = getBatteryPercent(context)
             views.setProgressBar(R.id.batteryProgress, 100, battery, false)
             views.setTextViewText(R.id.batteryPercent, "$battery%")
             views.setTextColor(
@@ -133,18 +148,19 @@ class WidgetPackProvider : AppWidgetProvider() {
         // ─── Update đầy đủ + download ảnh (lần đầu) ──────────────────────────────
 
         fun updateAppWidgetWithImage(
-            context: Context,
-            appWidgetManager: AppWidgetManager,
-            appWidgetId: Int
+            context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int
         ) {
-            Log.d("Widget", "updateAppWidgetWithImage ${getCurrentTime()}")
+            val time = getCurrentTime()
+            val battery = getBatteryPercent(context)
+            lastStates[appWidgetId] = Pair(time, battery)
+
+            Log.d("Widget", "updateAppWidgetWithImage $time")
             val views = RemoteViews(context.packageName, R.layout.widget_date_battery)
 
-            views.setTextViewText(R.id.tvTime, getCurrentTime())
+            views.setTextViewText(R.id.tvTime, time)
             views.setTextViewText(R.id.tvWeekDay, getCurrentDay())
             views.setTextViewText(R.id.tvMonthDay, getCurrentMonthDay())
 
-            val battery = getBatteryPercent(context)
             views.setProgressBar(R.id.batteryProgress, 100, battery, false)
             views.setTextViewText(R.id.batteryPercent, "$battery%")
             views.setTextColor(
@@ -159,8 +175,11 @@ class WidgetPackProvider : AppWidgetProvider() {
             appWidgetManager.updateAppWidget(appWidgetId, views)
 
             val bgUrl = getBackgroundUrl(context)
-            val bitmap = loadCachedBitmap(context)
-                ?: if (!bgUrl.isNullOrBlank()) downloadAndCacheBitmap(context, bgUrl) else null
+            val bitmap =
+                loadCachedBitmap(context) ?: if (!bgUrl.isNullOrBlank()) downloadAndCacheBitmap(
+                    context,
+                    bgUrl
+                ) else null
 
             if (bitmap != null) {
                 views.setImageViewBitmap(R.id.imgWidgetBackground, bitmap)
@@ -171,7 +190,8 @@ class WidgetPackProvider : AppWidgetProvider() {
         // ─── Helpers ─────────────────────────────────────────────────────────────
 
         private fun getLaunchPendingIntent(context: Context) = PendingIntent.getActivity(
-            context, 0,
+            context,
+            0,
             Intent(context, ActivityMain::class.java),
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )

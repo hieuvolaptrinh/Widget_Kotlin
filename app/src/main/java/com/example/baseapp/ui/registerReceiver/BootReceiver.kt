@@ -9,6 +9,7 @@ import com.example.baseapp.ui.service.WidgetUpdateService
 import com.example.baseapp.ui.widget.WidgetPackProvider
 
 class BootReceiver : BroadcastReceiver() {
+    //     Sau khi máy khởi động, nếu có widget đang active thì khởi chạy service cập nhật.
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action == Intent.ACTION_BOOT_COMPLETED) {
             // Kiểm tra có widget nào đang active không

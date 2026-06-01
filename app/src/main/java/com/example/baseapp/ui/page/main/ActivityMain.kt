@@ -8,17 +8,17 @@ import android.content.IntentFilter
 import android.os.BatteryManager
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import androidx.activity.viewModels
-import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.example.baseapp.data.remote.Resource
 import com.example.baseapp.data.remote.dto.WidgetPack
 import com.example.baseapp.databinding.ActivityMainBinding
 import com.example.baseapp.ui.base.BaseActivity
-import com.example.baseapp.ui.widget.HelloWidgetProvider
 import com.example.baseapp.ui.widget.WidgetPackProvider
 import dagger.hilt.android.AndroidEntryPoint
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @AndroidEntryPoint
 class ActivityMain : BaseActivity<ActivityMainBinding>() {
@@ -35,53 +35,22 @@ class ActivityMain : BaseActivity<ActivityMainBinding>() {
     }
 
     override fun initView() {
-
-    }
-
-    fun previewWidgetPack() {
-        val pack = currentPack ?: return
-        val previewUrl = pack.widgets.getOrNull(1)?.previewUrl
-            ?.takeIf { it.isNotBlank() }
-            ?: return
-
-        showPreview(previewUrl)
-        binding.batteryBody.isVisible = false
-        binding.batteryCap.isVisible = false
+        // Hiển thị thời gian & pin thực ngay khi vào màn hình
+        updateDateTimeUi()
+        updateBatteryUi()
     }
 
     override fun initAction() {
         binding.cardPreview.setOnClickListener {
-            // Save background URL before pinning so the widget can load it
             saveWidgetBackgroundUrl()
-
-            val appWidgetManager = AppWidgetManager.getInstance(this)
-            val provider = ComponentName(this, WidgetPackProvider::class.java)
-            if (appWidgetManager.isRequestPinAppWidgetSupported) {
-                val callbackIntent = Intent(this, WidgetPackProvider::class.java)
-                    .setAction(WidgetPackProvider.ACTION_PINNED)
-                val flags = PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-                val successCallback = PendingIntent.getBroadcast(this, 0, callbackIntent, flags)
-                appWidgetManager.requestPinAppWidget(provider, null, successCallback)
-            } else {
-                showToast("Launcher does not support pinning widgets")
-            }
-        }
-
-        binding.tvHelloWidget.setOnClickListener {
-            val appWidgetManager = AppWidgetManager.getInstance(this)
-            val provider = ComponentName(this, HelloWidgetProvider::class.java)
-            if (appWidgetManager.isRequestPinAppWidgetSupported) {
-                appWidgetManager.requestPinAppWidget(provider, null, null)
-            } else {
-                showToast("Launcher does not support pinning widgets")
-            }
+            pinWidget()
         }
     }
 
     override fun initObserver() {
         viewModel.widgetPack.observe(this) { result ->
             when (result) {
-                is Resource.Loading -> Log.d("WidgetPack", "Loading widget pack...")
+                is Resource.Loading -> Log.d("WidgetPack", "Loading...")
                 is Resource.Error -> {
                     Log.e("WidgetPack", "Error: ${result.message} (code=${result.code})")
                     showToast(result.message)
@@ -89,56 +58,88 @@ class ActivityMain : BaseActivity<ActivityMainBinding>() {
                 is Resource.Success -> {
                     currentPack = result.data
                     Log.d("WidgetPack", "Success: name=${result.data.name}, widgets=${result.data.widgets.size}")
-                    // Save background URL immediately so it's ready when widget is pinned
+                    // Lưu URL vào SharedPrefs cho widget provider dùng khi pin
                     saveWidgetBackgroundUrl()
-                    previewWidgetPack()
+                    // Load ảnh nền từ API lên preview card
+                    loadPreviewBackground(result.data)
                 }
             }
         }
     }
 
-    private fun showPreview(url: String) {
-        Log.d("WidgetPack", "Show preview: $url")
-        binding.imgPreview.isVisible = true
-        binding.groupInfoText.visibility = View.GONE
-        Glide.with(this)
-            .load(url)
-            .into(binding.imgPreview)
+    // ─── Load ảnh nền từ API vào card preview ──────────────────────────────────
+
+    private fun loadPreviewBackground(pack: WidgetPack) {
+        // Lấy backgroundUrl từ widget đầu tiên (widget type "date") → fallback pack.background → pack.preview
+        val bgUrl = pack.widgets.firstOrNull()?.imageUrl?.firstOrNull()?.backgroundUrl
+            ?.takeIf { it.isNotBlank() }
+            ?: pack.background.takeIf { it.isNotBlank() }
+            ?: pack.preview.takeIf { it.isNotBlank() }
+
+        if (bgUrl != null) {
+            Log.d("WidgetPack", "Loading preview background: $bgUrl")
+            Glide.with(this)
+                .load(bgUrl)
+                .centerCrop()
+                .into(binding.imgPreview)
+        } else {
+            Log.w("WidgetPack", "No background URL found")
+        }
     }
 
-    private fun applySelectedBackground(url: String) {
-        binding.imgPreview.isVisible = true
-        binding.groupInfoText.visibility = View.VISIBLE
-        Glide.with(this)
-            .load(url)
-            .into(binding.imgPreview)
+    // ─── Pin widget lên home screen ─────────────────────────────────────────────
+
+    private fun pinWidget() {
+        val appWidgetManager = AppWidgetManager.getInstance(this)
+        val provider = ComponentName(this, WidgetPackProvider::class.java)
+        if (appWidgetManager.isRequestPinAppWidgetSupported) {
+            val callbackIntent = Intent(this, WidgetPackProvider::class.java)
+                .setAction(WidgetPackProvider.ACTION_PINNED)
+            val flags = PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            val successCallback = PendingIntent.getBroadcast(this, 0, callbackIntent, flags)
+            appWidgetManager.requestPinAppWidget(provider, null, successCallback)
+        } else {
+            showToast("Launcher không hỗ trợ pin widget")
+        }
     }
+
+    // ─── Cập nhật pin thực ──────────────────────────────────────────────────────
 
     private fun updateBatteryUi() {
-        val intent = registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
-        val level = intent?.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) ?: -1
-        val scale = intent?.getIntExtra(BatteryManager.EXTRA_SCALE, -1) ?: -1
+        val batteryIntent = registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
+        val level = batteryIntent?.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) ?: -1
+        val scale = batteryIntent?.getIntExtra(BatteryManager.EXTRA_SCALE, -1) ?: -1
         val percent = if (level >= 0 && scale > 0) (level * 100 / scale) else 0
 
         binding.batteryProgress.progress = percent
         binding.batteryPercent.text = "$percent%"
+
+        // Màu text pin theo mức sạc
+        binding.batteryPercent.setTextColor(
+            when {
+                percent <= 20 -> android.graphics.Color.parseColor("#FF4444") // Đỏ
+                percent <= 50 -> android.graphics.Color.parseColor("#FFA500") // Cam
+                else -> android.graphics.Color.WHITE
+            }
+        )
     }
 
-    /**
-     * Get the best available background URL from the current widget pack and save it
-     * to SharedPreferences so the widget provider can load it.
-     */
+    // ─── Cập nhật giờ/ngày thực ─────────────────────────────────────────────────
+
+    private fun updateDateTimeUi() {
+        val now = Date()
+        binding.tvTime.text = SimpleDateFormat("HH:mm", Locale.getDefault()).format(now)
+        binding.tvWeekDay.text = SimpleDateFormat("EEEE", Locale.getDefault()).format(now)
+        binding.tvMonthDay.text = SimpleDateFormat("MMMM d", Locale.getDefault()).format(now)
+    }
+
+    // ─── Lưu background URL cho WidgetPackProvider ──────────────────────────────
+
     private fun saveWidgetBackgroundUrl() {
         val pack = currentPack ?: return
-
-        // Try to get backgroundUrl from the first widget's imageUrl list
         val bgUrl = pack.widgets.firstOrNull()?.imageUrl?.firstOrNull()?.backgroundUrl
             ?.takeIf { it.isNotBlank() }
-        // Fallback to previewUrl of the first widget
-            ?: pack.widgets.firstOrNull()?.previewUrl?.takeIf { it.isNotBlank() }
-        // Fallback to pack-level background
             ?: pack.background.takeIf { it.isNotBlank() }
-        // Fallback to pack preview
             ?: pack.preview.takeIf { it.isNotBlank() }
 
         if (bgUrl != null) {

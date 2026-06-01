@@ -29,7 +29,4 @@ class ViewModelMain @Inject constructor(
             _widgetPack.value = result
         }
     }
-
-
-    // hàm để gắn widget vào giao diện sẽ được viết ở đây
 }

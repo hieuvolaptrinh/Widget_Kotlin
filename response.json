@@ -1,0 +1,352 @@
+{
+  "error": 0,
+  "statusCode": 200,
+  "message": "success",
+  "data": {
+    "_id": "69e4714f9708a69fde4102af",
+    "name": "Crayon",
+    "preview": "https://candy-storage.s3.ap-southeast-1.amazonaws.com/new-themes/pre_fp65_crayon/75455c86-ca32-473b-9b4d-803440937a8f.png",
+    "subPreview": "",
+    "subPreviewType": "image",
+    "background": "https://candy-storage.s3.ap-southeast-1.amazonaws.com/new-themes/bg_small_crayon/af0b8656-f668-4f7c-a63a-386ec7cf665c.png",
+    "categoryIds": [
+      {
+        "_id": "69e4714f9708a69fde40e4b3",
+        "name": "Cute",
+        "iconUrl": "https://i.imghippo.com/files/juN3097Sc.webp"
+      }
+    ],
+    "tag": "New",
+    "isPaid": false,
+    "order": 176,
+    "widgets": [
+      {
+        "_id": "69e4714f9708a69fde40eb6e",
+        "name": "Date 3 Medium",
+        "previewUrl": "https://candy-storage.s3.ap-southeast-1.amazonaws.com/new-themes/pre_medium_crayon/6dc1b6bd-a9bf-4fa3-a0ff-97e76c8e0e8e.png",
+        "imageUrl": [
+          {
+            "url": "",
+            "backgroundUrl": "https://candy-storage.s3.ap-southeast-1.amazonaws.com/new-themes/bg_medium_crayon/6aed2623-1ab3-46cd-af6b-673bdfab1ece.png",
+            "avatarUrl": "",
+            "defaultAvatar": "",
+            "position": "position#1",
+            "rotation": 0,
+            "width": 1,
+            "height": 1,
+            "centerX": 0,
+            "centerY": 0,
+            "_id": "69e4714f9708a69fde40eb6e"
+          }
+        ],
+        "size": "MEDIUM",
+        "type": "date#3",
+        "font": "Borel",
+        "textColor": "#FFFFFF",
+        "contentPosition": "center"
+      },
+      {
+        "_id": "69e4714f9708a69fde40eb6f",
+        "name": "Image Small",
+        "previewUrl": "https://candy-storage.s3.ap-southeast-1.amazonaws.com/new-themes/bg_small_crayon/c36a548f-9e61-4140-9c40-fd71845bcb2f.png",
+        "imageUrl": [
+          {
+            "url": "",
+            "backgroundUrl": "https://candy-storage.s3.ap-southeast-1.amazonaws.com/new-themes/bg_small_crayon/c36a548f-9e61-4140-9c40-fd71845bcb2f.png",
+            "avatarUrl": "",
+            "defaultAvatar": "",
+            "position": "position#1",
+            "rotation": 0,
+            "width": 1,
+            "height": 1,
+            "centerX": 0,
+            "centerY": 0,
+            "_id": "69e4714f9708a69fde40eb6f"
+          }
+        ],
+        "size": "SMALL",
+        "type": "image#1",
+        "font": "Henny Penny",
+        "textColor": "#FFFFFF",
+        "contentPosition": "center"
+      }
+    ],
+    "icons": [
+      {
+        "_id": "69e4714f9708a69fde40eb47",
+        "appname": "App Store",
+        "imageUrl": "https://candy-storage.s3.ap-southeast-1.amazonaws.com/new-themes/icon_crayon_appstore/3bd3a134-7868-4148-8e44-513cd4fc07c3.png",
+        "iosAppUrl": "itms-apps://itunes.apple.com",
+        "androidAppUrl": ""
+      },
+      {
+        "_id": "69e4714f9708a69fde40eb48",
+        "appname": "Calculator",
+        "imageUrl": "https://candy-storage.s3.ap-southeast-1.amazonaws.com/new-themes/icon_crayon_calculator/bf03bcc1-4451-4034-a4f9-80e20ce1c90f.png",
+        "iosAppUrl": "shortcuts://x-callback-url/run-shortcut?x-error=calc://",
+        "androidAppUrl": "com.google.android.calculator"
+      },
+      {
+        "_id": "69e4714f9708a69fde40eb49",
+        "appname": "Calendar",
+        "imageUrl": "https://candy-storage.s3.ap-southeast-1.amazonaws.com/new-themes/icon_crayon_calendar/008f416c-487c-43f0-b9b7-ac52bd4b502e.png",
+        "iosAppUrl": "calshow://",
+        "androidAppUrl": "com.google.android.calendar"
+      },
+      {
+        "_id": "69e4714f9708a69fde40eb4a",
+        "appname": "Camera",
+        "imageUrl": "https://candy-storage.s3.ap-southeast-1.amazonaws.com/new-themes/icon_crayon_camera/13f8ef17-fce2-4287-b93d-3d66b31e004f.png",
+        "iosAppUrl": "shortcuts://x-callback-url/run-shortcut?x-error=camera://",
+        "androidAppUrl": "com.android.camera"
+      },
+      {
+        "_id": "69e4714f9708a69fde40eb4b",
+        "appname": "Clock",
+        "imageUrl": "https://candy-storage.s3.ap-southeast-1.amazonaws.com/new-themes/icon_crayon_clock/b2379c68-edf7-41f6-842e-936917275ac2.png",
+        "iosAppUrl": "shortcuts://x-callback-url/run-shortcut?x-error=clock-alarm://",
+        "androidAppUrl": "com.google.android.deskclock"
+      },
+      {
+        "_id": "69e4714f9708a69fde40eb4c",
+        "appname": "FaceTime",
+        "imageUrl": "https://candy-storage.s3.ap-southeast-1.amazonaws.com/new-themes/icon_crayon_facetime/5a986e2d-305d-4088-b993-60c74e7dd7d9.png",
+        "iosAppUrl": "shortcuts://x-callback-url/run-shortcut?x-error=contact://",
+        "androidAppUrl": ""
+      },
+      {
+        "_id": "69e4714f9708a69fde40eb4d",
+        "appname": "Facebook",
+        "imageUrl": "https://candy-storage.s3.ap-southeast-1.amazonaws.com/new-themes/icon_crayon_fb/deb83574-97de-47f0-8b7d-3fb6ba2dcda2.png",
+        "iosAppUrl": "fb://",
+        "androidAppUrl": "com.facebook.katana"
+      },
+      {
+        "_id": "69e4714f9708a69fde40eb4e",
+        "appname": "Google",
+        "imageUrl": "https://candy-storage.s3.ap-southeast-1.amazonaws.com/new-themes/icon_crayon_gg/cb9679cc-055d-4dec-b9c2-213ba0365272.png",
+        "iosAppUrl": "google://",
+        "androidAppUrl": "com.google.android.googlequicksearchbox"
+      },
+      {
+        "_id": "69e4714f9708a69fde40eb4f",
+        "appname": "Health",
+        "imageUrl": "https://candy-storage.s3.ap-southeast-1.amazonaws.com/new-themes/icon_crayon_health/95384511-67d6-4a7b-8da7-155cb6bcbf60.png",
+        "iosAppUrl": "x-apple-health://",
+        "androidAppUrl": ""
+      },
+      {
+        "_id": "69e4714f9708a69fde40eb50",
+        "appname": "Messages",
+        "imageUrl": "https://candy-storage.s3.ap-southeast-1.amazonaws.com/new-themes/icon_crayon_messages/f946b235-84d0-41eb-91ca-7d8d69a60055.png",
+        "iosAppUrl": "messages://",
+        "androidAppUrl": "com.google.android.apps.messaging"
+      },
+      {
+        "_id": "69e4714f9708a69fde40eb51",
+        "appname": "Music",
+        "imageUrl": "https://candy-storage.s3.ap-southeast-1.amazonaws.com/new-themes/icon_crayon_music/a64075f9-07e9-4129-8fb5-7af304fcffb0.png",
+        "iosAppUrl": "music://",
+        "androidAppUrl": "com.google.android.music"
+      },
+      {
+        "_id": "69e4714f9708a69fde40eb52",
+        "appname": "Notes",
+        "imageUrl": "https://candy-storage.s3.ap-southeast-1.amazonaws.com/new-themes/icon_crayon_notes/3748a999-74ed-41c6-ad3c-09e3ac8749be.png",
+        "iosAppUrl": "mobilenotes://",
+        "androidAppUrl": "com.google.android.keep"
+      },
+      {
+        "_id": "69e4714f9708a69fde40eb53",
+        "appname": "Phone",
+        "imageUrl": "https://candy-storage.s3.ap-southeast-1.amazonaws.com/new-themes/icon_crayon_phone/8732de5a-6551-41fe-9f41-1c0367c25093.png",
+        "iosAppUrl": "shortcuts://x-callback-url/run-shortcut?x-error=mobilephone://",
+        "androidAppUrl": "com.google.android.dialer"
+      },
+      {
+        "_id": "69e4714f9708a69fde40eb54",
+        "appname": "Photos",
+        "imageUrl": "https://candy-storage.s3.ap-southeast-1.amazonaws.com/new-themes/icon_crayon_photos/0b09eeb7-fdd9-4c6b-9930-b24c26d40729.png",
+        "iosAppUrl": "photos-redirect://",
+        "androidAppUrl": "com.google.android.apps.photos"
+      },
+      {
+        "_id": "69e4714f9708a69fde40eb55",
+        "appname": "Safari",
+        "imageUrl": "https://candy-storage.s3.ap-southeast-1.amazonaws.com/new-themes/icon_crayon_safari/e73d8da7-342a-42a5-a838-65ad83b692b1.png",
+        "iosAppUrl": "data:text/html;base64,PGh0bWw+PGJvZHkgb25sb2FkPSJzZXRUaW1lb3V0KGZ1bmN0aW9uKCkgeyB3aW5kb3cuY2xvc2UoKTsgfSwgNTApOyl+PC9ib2R5PjwvaHRtbD4=",
+        "androidAppUrl": ""
+      },
+      {
+        "_id": "69e4714f9708a69fde40eb56",
+        "appname": "Settings",
+        "imageUrl": "https://candy-storage.s3.ap-southeast-1.amazonaws.com/new-themes/icon_crayon_settings/268001ca-4d16-48fd-b31b-efe5783ff172.png",
+        "iosAppUrl": "App-prefs://",
+        "androidAppUrl": "com.android.settings"
+      },
+      {
+        "_id": "69e4714f9708a69fde40eb57",
+        "appname": "Snapchat",
+        "imageUrl": "https://candy-storage.s3.ap-southeast-1.amazonaws.com/new-themes/icon_crayon_snapchat/9a1f7e36-1163-4dfa-8ecf-e26d1ade4721.png",
+        "iosAppUrl": "snapchat://",
+        "androidAppUrl": "com.snapchat.android"
+      },
+      {
+        "_id": "69e4714f9708a69fde40eb58",
+        "appname": "TikTok",
+        "imageUrl": "https://candy-storage.s3.ap-southeast-1.amazonaws.com/new-themes/icon_crayon_tiktok/9d308f09-4d81-4453-98b1-1746762372d1.png",
+        "iosAppUrl": "tiktok://",
+        "androidAppUrl": "com.zhiliaoapp.musically"
+      },
+      {
+        "_id": "69e4714f9708a69fde40eb59",
+        "appname": "Weather",
+        "imageUrl": "https://candy-storage.s3.ap-southeast-1.amazonaws.com/new-themes/icon_crayon_weather/fa681c78-5c19-4050-8aa9-b029727c71b4.png",
+        "iosAppUrl": "shortcuts://x-callback-url/run-shortcut?x-error=weather://",
+        "androidAppUrl": "com.google.android.apps.weather"
+      },
+      {
+        "_id": "69e4714f9708a69fde40eb5a",
+        "appname": "WhatsApp",
+        "imageUrl": "https://candy-storage.s3.ap-southeast-1.amazonaws.com/new-themes/icon_crayon_whatsapp/4358c5e4-8d6a-4703-82f1-7f9eb0b06082.png",
+        "iosAppUrl": "whatsapp://",
+        "androidAppUrl": "com.whatsapp"
+      },
+      {
+        "_id": "69e4714f9708a69fde40eb5b",
+        "appname": "X",
+        "imageUrl": "https://candy-storage.s3.ap-southeast-1.amazonaws.com/new-themes/icon_crayon_twitter/ec54aaf0-3cfc-4889-9d48-b412aebc9379.png",
+        "iosAppUrl": "twitter://",
+        "androidAppUrl": "com.twitter.android"
+      },
+      {
+        "_id": "69e4714f9708a69fde40eb5c",
+        "appname": "Find My",
+        "imageUrl": "https://candy-storage.s3.ap-southeast-1.amazonaws.com/new-themes/icon_crayon_find-my/22f22759-a258-49f6-8c13-04b11238a08a.png",
+        "iosAppUrl": "findmy://",
+        "androidAppUrl": ""
+      },
+      {
+        "_id": "69e4714f9708a69fde40eb5d",
+        "appname": "Gmail",
+        "imageUrl": "https://candy-storage.s3.ap-southeast-1.amazonaws.com/new-themes/icon_crayon_gmail/326a40c8-cc9d-43fe-8bb7-1cb21aa89581.png",
+        "iosAppUrl": "googlegmail://",
+        "androidAppUrl": "com.google.android.gm"
+      },
+      {
+        "_id": "69e4714f9708a69fde40eb5e",
+        "appname": "Instagram",
+        "imageUrl": "https://candy-storage.s3.ap-southeast-1.amazonaws.com/new-themes/icon_crayon_insta/e5234b66-3a1c-4f05-a59f-a67ded26d208.png",
+        "iosAppUrl": "instagram://",
+        "androidAppUrl": "com.instagram.android"
+      },
+      {
+        "_id": "69e4714f9708a69fde40eb5f",
+        "appname": "iTunes Store",
+        "imageUrl": "https://candy-storage.s3.ap-southeast-1.amazonaws.com/new-themes/icon_crayon_itunes/375c0cf2-b01a-4518-8625-1d8df44163f3.png",
+        "iosAppUrl": "itms://",
+        "androidAppUrl": ""
+      },
+      {
+        "_id": "69e4714f9708a69fde40eb60",
+        "appname": "LinkedIn",
+        "imageUrl": "https://candy-storage.s3.ap-southeast-1.amazonaws.com/new-themes/icon_crayon_linkedin/0c41123b-7a0a-4dc8-86a4-591dd7624618.png",
+        "iosAppUrl": "linkedin://",
+        "androidAppUrl": "com.linkedin.android"
+      },
+      {
+        "_id": "69e4714f9708a69fde40eb61",
+        "appname": "Maps",
+        "imageUrl": "https://candy-storage.s3.ap-southeast-1.amazonaws.com/new-themes/icon_crayon_maps/e8a369a5-a2ae-4b3d-86e5-f7de67ae8b89.png",
+        "iosAppUrl": "map://",
+        "androidAppUrl": "com.google.android.apps.maps"
+      },
+      {
+        "_id": "69e4714f9708a69fde40eb62",
+        "appname": "Netflix",
+        "imageUrl": "https://candy-storage.s3.ap-southeast-1.amazonaws.com/new-themes/icon_crayon_netflix/ea16bfff-27c5-4e36-a23c-8086246e13d2.png",
+        "iosAppUrl": "nflx://",
+        "androidAppUrl": "com.netflix.mediaclient"
+      },
+      {
+        "_id": "69e4714f9708a69fde40eb63",
+        "appname": "Pinterest",
+        "imageUrl": "https://candy-storage.s3.ap-southeast-1.amazonaws.com/new-themes/icon_crayon_pinterest/ea1e3a6a-ae92-49d5-bb2e-33d887fedd36.png",
+        "iosAppUrl": "pinterest://",
+        "androidAppUrl": "com.pinterest"
+      },
+      {
+        "_id": "69e4714f9708a69fde40eb64",
+        "appname": "Podcasts",
+        "imageUrl": "https://candy-storage.s3.ap-southeast-1.amazonaws.com/new-themes/icon_crayon_podcasts/9edea2fa-234d-4474-8bc1-387d88982f0b.png",
+        "iosAppUrl": "podcasts://",
+        "androidAppUrl": ""
+      },
+      {
+        "_id": "69e4714f9708a69fde40eb65",
+        "appname": "Spotify",
+        "imageUrl": "https://candy-storage.s3.ap-southeast-1.amazonaws.com/new-themes/icon_crayon_spotify/9f315bef-a821-4da0-bc0e-0a4510e9d7d9.png",
+        "iosAppUrl": "spotify://",
+        "androidAppUrl": "com.spotify.music"
+      },
+      {
+        "_id": "69e4714f9708a69fde40eb66",
+        "appname": "Telegram",
+        "imageUrl": "https://candy-storage.s3.ap-southeast-1.amazonaws.com/new-themes/icon_crayon_tele/183c4b87-75dc-4f36-9039-ea85390b8ab8.png",
+        "iosAppUrl": "tg://",
+        "androidAppUrl": "org.telegram.messenger"
+      },
+      {
+        "_id": "69e4714f9708a69fde40eb67",
+        "appname": "YouTube",
+        "imageUrl": "https://candy-storage.s3.ap-southeast-1.amazonaws.com/new-themes/icon_crayon_utube/06296247-eb06-4e1a-a757-a1d1ff28bc00.png",
+        "iosAppUrl": "youtube://",
+        "androidAppUrl": "com.google.android.youtube"
+      },
+      {
+        "_id": "69e4714f9708a69fde40eb68",
+        "appname": "Messenger",
+        "imageUrl": "https://candy-storage.s3.ap-southeast-1.amazonaws.com/new-themes/crayon_messenger/49f6eefb-1818-4833-90f9-09cc3889dc70.png",
+        "iosAppUrl": "fb-messenger://",
+        "androidAppUrl": "com.facebook.orca"
+      },
+      {
+        "_id": "69e4714f9708a69fde40eb69",
+        "appname": "Internet",
+        "imageUrl": "https://candy-storage.s3.ap-southeast-1.amazonaws.com/new-themes/android_crayon_icons_internet/35df23a1-9a3b-4274-9ae0-b358282cd277.png",
+        "iosAppUrl": "data:text/html;base64,PGh0bWw+PGJvZHkgb25sb2FkPSJzZXRUaW1lb3V0KGZ1bmN0aW9uKCkgeyB3aW5kb3cuY2xvc2UoKTsgfSwgNTApOyl+PC9ib2R5PjwvaHRtbD4=",
+        "androidAppUrl": "com.android.chrome"
+      },
+      {
+        "_id": "69e4714f9708a69fde40eb6a",
+        "appname": "Gallery",
+        "imageUrl": "https://candy-storage.s3.ap-southeast-1.amazonaws.com/new-themes/icon_crayon_photos/0b09eeb7-fdd9-4c6b-9930-b24c26d40729.png",
+        "iosAppUrl": "photos-redirect://",
+        "androidAppUrl": "com.google.android.apps.photos"
+      },
+      {
+        "_id": "69e4714f9708a69fde40eb6b",
+        "appname": "Contacts",
+        "imageUrl": "https://candy-storage.s3.ap-southeast-1.amazonaws.com/new-themes/android_crayon_icons_contacts/eab3c236-c956-4054-9633-46eca61b3ef9.png",
+        "iosAppUrl": "contacts://",
+        "androidAppUrl": "com.google.android.contacts"
+      },
+      {
+        "_id": "69e4714f9708a69fde40eb6c",
+        "appname": "Play Store",
+        "imageUrl": "https://candy-storage.s3.ap-southeast-1.amazonaws.com/new-themes/android_crayon_icons_playstore/d2cc98ce-e7b8-46f6-a3b1-04e5250a2df3.png",
+        "iosAppUrl": "",
+        "androidAppUrl": "com.android.vending"
+      },
+      {
+        "_id": "69e4714f9708a69fde40eb6d",
+        "appname": "I Tunes Store",
+        "imageUrl": "https://candy-storage.s3.ap-southeast-1.amazonaws.com/new-themes/icon_crayon_itunes/375c0cf2-b01a-4518-8625-1d8df44163f3.png",
+        "iosAppUrl": "",
+        "androidAppUrl": ""
+      }
+    ],
+    "createdAt": "2023-10-31T09:59:33.517Z",
+    "updatedAt": "2026-05-31T15:57:34.039Z"
+  }
+}

@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
     android:initialLayout="@layout/widget_date_battery"
-    android:minWidth="254dp"
-    android:minHeight="119dp"
-    android:minResizeWidth="254dp"
-    android:minResizeHeight="119dp"
+    android:minWidth="250dp"
+    android:minHeight="100dp"
+    android:minResizeWidth="160dp"
+    android:minResizeHeight="80dp"
+    android:maxResizeHeight="120dp"
+    android:targetCellWidth="3"
+    android:targetCellHeight="1"
     android:resizeMode="horizontal|vertical"
     android:updatePeriodMillis="0"
     android:widgetCategory="home_screen" />

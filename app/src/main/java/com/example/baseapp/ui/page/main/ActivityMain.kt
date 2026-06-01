@@ -19,6 +19,12 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import android.app.AlarmManager
+import android.content.Context
+
+import android.os.Build
+import android.provider.Settings
+
 
 @AndroidEntryPoint
 class ActivityMain : BaseActivity<ActivityMainBinding>() {
@@ -38,8 +44,20 @@ class ActivityMain : BaseActivity<ActivityMainBinding>() {
         // Hiển thị thời gian & pin thực ngay khi vào màn hình
         updateDateTimeUi()
         updateBatteryUi()
+        requestExactAlarmPermission()
     }
+    private fun requestExactAlarmPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val alarmManager =
+                getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
+            if (!alarmManager.canScheduleExactAlarms()) {
+                startActivity(
+                    Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
+                )
+            }
+        }
+    }
     override fun initAction() {
         binding.cardPreview.setOnClickListener {
             saveWidgetBackgroundUrl()

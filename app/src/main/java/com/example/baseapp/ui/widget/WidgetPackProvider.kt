@@ -3,6 +3,7 @@ package com.example.baseapp.ui.widget
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -10,44 +11,74 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.BatteryManager
 import android.util.Log
+import android.view.View
 import android.widget.RemoteViews
 import com.example.baseapp.R
 import com.example.baseapp.ui.page.main.ActivityMain
-import com.example.baseapp.ui.service.WidgetUpdateService
 import java.io.File
 import java.io.FileOutputStream
 import java.net.URL
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 import kotlin.concurrent.thread
 
 class WidgetPackProvider : AppWidgetProvider() {
 
-    override fun onEnabled(context: Context) {
-        super.onEnabled(context)
-        WidgetUpdateService.start(context)
-    }
+    override fun onReceive(context: Context, intent: Intent) {
+        super.onReceive(context, intent)
+        Log.d("Widget", "onReceive action = ${intent.action}")
 
-    override fun onDisabled(context: Context) {
-        super.onDisabled(context)
-        WidgetUpdateService.stop(context)
+        when (intent.action) {
+            ACTION_PINNED -> {
+                val pendingResult = goAsync()
+                thread {
+                    try {
+                        val manager = AppWidgetManager.getInstance(context)
+                        val provider = ComponentName(context, WidgetPackProvider::class.java)
+                        val ids = manager.getAppWidgetIds(provider)
+                        for (id in ids) updateAppWidgetWithImage(context, manager, id)
+                    } finally {
+                        pendingResult.finish()
+                    }
+                }
+            }
+
+            Intent.ACTION_POWER_CONNECTED, Intent.ACTION_POWER_DISCONNECTED -> {
+                val pendingResult = goAsync()
+                thread {
+                    try {
+                        val manager = AppWidgetManager.getInstance(context)
+                        val provider = ComponentName(context, WidgetPackProvider::class.java)
+                        val ids = manager.getAppWidgetIds(provider)
+
+                        // Xác định trạng thái sạc trực tiếp từ action
+                        val isCharging = intent.action == Intent.ACTION_POWER_CONNECTED
+                        val batteryInfo = getBatteryInfo(context)
+
+                        Log.d(
+                            "Widget",
+                            "Power event: charging=$isCharging, percent=${batteryInfo.percent}"
+                        )
+
+                        for (id in ids) {
+                            updateBattery(context, manager, id, batteryInfo.percent, isCharging)
+                        }
+                    } finally {
+                        pendingResult.finish()
+                    }
+                }
+            }
+        }
     }
 
     override fun onUpdate(
         context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray
     ) {
-        WidgetUpdateService.start(context)
         thread {
             for (id in appWidgetIds) updateAppWidgetWithImage(context, appWidgetManager, id)
         }
     }
 
     companion object {
-        // để tối ưu thay đổi những gì cần thay đổi thôi không update hết
-        private var cachedViews: RemoteViews? = null
         private var cachedBitmap: Bitmap? = null
-        private val lastStates = mutableMapOf<Int, Pair<String, Int>>()
 
         const val ACTION_PINNED = "com.example.baseapp.widget.ACTION_PINNED"
         private const val PREFS_NAME = "widget_pack_prefs"
@@ -101,38 +132,31 @@ class WidgetPackProvider : AppWidgetProvider() {
             }
         }
 
-        // ─── Update giờ/pin (gọi từ Service mỗi phút) ────────────────────────────
+        // ─── Update pin (gọi từ Service mỗi phút hoặc khi có event sạc) ──────────
 
-        fun updateTimeAndBattery(
-            context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int
+        fun updateBattery(context: Context, percent: Int, isCharging: Boolean) {
+            val manager = AppWidgetManager.getInstance(context)
+            val provider = ComponentName(context, WidgetPackProvider::class.java)
+            val ids = manager.getAppWidgetIds(provider)
+            for (id in ids) updateBattery(context, manager, id, percent, isCharging)
+        }
+
+        private fun updateBattery(
+            context: Context,
+            appWidgetManager: AppWidgetManager,
+            appWidgetId: Int,
+            percent: Int,
+            isCharging: Boolean
         ) {
-            val time = getCurrentTime()
-            val battery = getBatteryPercent(context)
-            val currentState = Pair(time, battery)
+            // Luôn tạo mới RemoteViews (không cache — tránh tích lũy operations)
+            val views = RemoteViews(context.packageName, R.layout.widget_date_battery)
 
-            // Bỏ qua nếu không có gì thay đổi
-            if (lastStates[appWidgetId] == currentState) {
-                return
-            }
-            lastStates[appWidgetId] = currentState
+            Log.d("Widget", "updateBattery: percent=$percent, isCharging=$isCharging")
 
-            val views =
-                cachedViews ?: RemoteViews(context.packageName, R.layout.widget_date_battery).also {
-                    cachedViews = it
-                }
-
-            views.setTextViewText(R.id.tvTime, time)
-            views.setTextViewText(R.id.tvWeekDay, getCurrentDay())
-            views.setTextViewText(R.id.tvMonthDay, getCurrentMonthDay())
-
-            views.setProgressBar(R.id.batteryProgress, 100, battery, false)
-            views.setTextViewText(R.id.batteryPercent, "$battery%")
-            views.setTextColor(
-                R.id.batteryPercent, when {
-                    battery <= 20 -> android.graphics.Color.parseColor("#FF4444")
-                    battery <= 50 -> android.graphics.Color.parseColor("#FFA500")
-                    else -> android.graphics.Color.parseColor("#4CAF50")
-                }
+            views.setProgressBar(R.id.batteryProgress, 100, percent.coerceIn(0, 100), false)
+            views.setViewVisibility(
+                R.id.imgCharging,
+                if (isCharging) View.VISIBLE else View.GONE
             )
 
             views.setOnClickPendingIntent(R.id.widgetRoot, getLaunchPendingIntent(context))
@@ -145,33 +169,22 @@ class WidgetPackProvider : AppWidgetProvider() {
             appWidgetManager.updateAppWidget(appWidgetId, views)
         }
 
+
         // ─── Update đầy đủ + download ảnh (lần đầu) ──────────────────────────────
 
         fun updateAppWidgetWithImage(
             context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int
         ) {
-            val time = getCurrentTime()
-            val battery = getBatteryPercent(context)
-            lastStates[appWidgetId] = Pair(time, battery)
+            val batteryInfo = getBatteryInfo(context)
 
-            Log.d("Widget", "updateAppWidgetWithImage $time")
             val views = RemoteViews(context.packageName, R.layout.widget_date_battery)
 
-            views.setTextViewText(R.id.tvTime, time)
-            views.setTextViewText(R.id.tvWeekDay, getCurrentDay())
-            views.setTextViewText(R.id.tvMonthDay, getCurrentMonthDay())
-
-            views.setProgressBar(R.id.batteryProgress, 100, battery, false)
-            views.setTextViewText(R.id.batteryPercent, "$battery%")
-            views.setTextColor(
-                R.id.batteryPercent, when {
-                    battery <= 20 -> android.graphics.Color.parseColor("#FF4444")
-                    battery <= 50 -> android.graphics.Color.parseColor("#FFA500")
-                    else -> android.graphics.Color.parseColor("#4CAF50")
-                }
+            views.setProgressBar(R.id.batteryProgress, 100, batteryInfo.percent, false)
+            views.setViewVisibility(
+                R.id.imgCharging,
+                if (batteryInfo.isCharging) View.VISIBLE else View.GONE
             )
 
-            views.setOnClickPendingIntent(R.id.widgetRoot, getLaunchPendingIntent(context))
             appWidgetManager.updateAppWidget(appWidgetId, views)
 
             val bgUrl = getBackgroundUrl(context)
@@ -187,6 +200,25 @@ class WidgetPackProvider : AppWidgetProvider() {
             }
         }
 
+        private data class BatteryInfo(val percent: Int, val isCharging: Boolean)
+
+        private fun getBatteryInfo(context: Context): BatteryInfo {
+            val intent = context.registerReceiver(
+                null, IntentFilter(Intent.ACTION_BATTERY_CHANGED)
+            )
+            val level = intent?.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) ?: -1
+            val scale = intent?.getIntExtra(BatteryManager.EXTRA_SCALE, -1) ?: -1
+            val percent = if (level >= 0 && scale > 0) {
+                ((level * 100f) / scale).toInt().coerceIn(0, 100)
+            } else {
+                0
+            }
+            val status = intent?.getIntExtra(BatteryManager.EXTRA_STATUS, -1) ?: -1
+            val isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING ||
+                    status == BatteryManager.BATTERY_STATUS_FULL
+            return BatteryInfo(percent, isCharging)
+        }
+
         // ─── Helpers ─────────────────────────────────────────────────────────────
 
         private fun getLaunchPendingIntent(context: Context) = PendingIntent.getActivity(
@@ -195,23 +227,5 @@ class WidgetPackProvider : AppWidgetProvider() {
             Intent(context, ActivityMain::class.java),
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
-
-        private fun getCurrentTime(): String =
-            SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date())
-
-        private fun getCurrentDay(): String =
-            SimpleDateFormat("EEEE", Locale.getDefault()).format(Date())
-
-        private fun getCurrentMonthDay(): String =
-            SimpleDateFormat("MMMM d", Locale.getDefault()).format(Date())
-
-        private fun getBatteryPercent(context: Context): Int {
-            val intent = context.registerReceiver(
-                null, IntentFilter(Intent.ACTION_BATTERY_CHANGED)
-            )
-            val level = intent?.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) ?: -1
-            val scale = intent?.getIntExtra(BatteryManager.EXTRA_SCALE, -1) ?: -1
-            return if (level >= 0 && scale > 0) (level * 100 / scale) else 0
-        }
     }
 }

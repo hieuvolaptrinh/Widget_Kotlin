@@ -4,105 +4,73 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
-import android.appwidget.AppWidgetManager
-import android.content.BroadcastReceiver
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.ServiceInfo
 import android.os.Build
+import android.os.IBinder
 import androidx.core.app.NotificationCompat
-import com.example.baseapp.R
+import com.example.baseapp.ui.receiver.BatteryReceiver
 import com.example.baseapp.ui.widget.WidgetPackProvider
 
 class WidgetUpdateService : Service() {
 
-    private val receiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            // Lắng nghe thay đổi thời gian/nguồn điện để cập nhật lại widget.
-            updateAllWidgets(context)
-
-        }
-    }
-
-    // Cập nhật thời gian/pin cho tất cả widget đang hoạt động.
-
-    private fun updateAllWidgets(context: Context) {
-
-        val manager = AppWidgetManager.getInstance(context)
-        val ids = manager.getAppWidgetIds(
-            ComponentName(context, WidgetPackProvider::class.java)
-        )
-
-        for (id in ids) {
-            WidgetPackProvider.Companion.updateTimeAndBattery(context, manager, id)
-        }
-    }
-
-
-    // Khởi chạy foreground service, đăng ký các sự kiện cập nhật và refresh lần đầu.
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        startForeground(NOTIF_ID, buildNotification())
-        val filter = IntentFilter().apply {
-            addAction(Intent.ACTION_TIME_TICK)
-            addAction(Intent.ACTION_TIME_CHANGED)
-            addAction(Intent.ACTION_TIMEZONE_CHANGED)
-            addAction(Intent.ACTION_DATE_CHANGED)
-            addAction(Intent.ACTION_POWER_CONNECTED)
-            addAction(Intent.ACTION_POWER_DISCONNECTED)
-        }
-        registerReceiver(receiver, filter)
-        // update lần đầu tiên
-        updateAllWidgets(this)
-
-        return START_STICKY // tự restart nếu bị kill
-    }
-
-    // Hủy đăng ký receiver khi service dừng.
-    override fun onDestroy() {
-        super.onDestroy()
-        unregisterReceiver(receiver)
-    }
-
-    // Service này không hỗ trợ bind.
-    override fun onBind(intent: Intent?) = null
-
-
-    // Tạo notification tối giản cho foreground service (bắt buộc trên Android mới).
-    private fun buildNotification(): Notification {
-        val channelId = "widget_service"
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                channelId, "Widget Service",
-                NotificationManager.IMPORTANCE_MIN
-            ).apply { setShowBadge(false) }
-            getSystemService(NotificationManager::class.java)
-                .createNotificationChannel(channel)
-        }
-        return NotificationCompat.Builder(this, channelId)
-            .setContentTitle("Widget đang chạy")
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
-            .setPriority(NotificationCompat.PRIORITY_MIN)
-            .setSilent(true)
-            .build()
-    }
-
-    companion object {
-        private const val NOTIF_ID = 1001
-
-        // Khởi chạy service theo đúng chế độ của từng phiên bản Android.
-        fun start(context: Context) {
-            val intent = Intent(context, WidgetUpdateService::class.java)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                context.startForegroundService(intent)
-            } else {
-                context.startService(intent)
+    private val batteryReceiver = BatteryReceiver().apply {
+        listener = object : BatteryReceiver.OnBatteryChangedListener {
+            override fun onBatteryChanged(percent: Int, isCharging: Boolean) {
+                // WidgetPackProvider handles updating all instances of the battery widget
+                WidgetPackProvider.updateBattery(this@WidgetUpdateService, percent, isCharging)
             }
         }
+    }
 
-        // Dừng service cập nhật widget.
-        fun stop(context: Context) {
-            context.stopService(Intent(context, WidgetUpdateService::class.java))
+    override fun onCreate() {
+        super.onCreate()
+        startForegroundService()
+        
+        // Đăng ký BatteryReceiver để lắng nghe thay đổi pin liên tục (kể cả khi tắt màn hình/app bị kill)
+        val filter = IntentFilter(Intent.ACTION_BATTERY_CHANGED)
+        registerReceiver(batteryReceiver, filter)
+    }
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        // START_STICKY để OS tự khởi động lại service nếu bị kill do thiếu RAM
+        return START_STICKY
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(batteryReceiver)
+    }
+
+    override fun onBind(intent: Intent?): IBinder? {
+        return null
+    }
+
+    private fun startForegroundService() {
+        val channelId = "widget_updater_channel"
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                channelId,
+                "Widget Update Service",
+                NotificationManager.IMPORTANCE_MIN // IMPORTANCE_MIN để giảm thiểu độ phiền phức của thông báo
+            )
+            val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            manager.createNotificationChannel(channel)
+        }
+        val notification: Notification = NotificationCompat.Builder(this, channelId)
+            .setContentTitle("")
+            .setContentText("")
+            .setSmallIcon(com.example.baseapp.R.mipmap.ic_launcher)
+            .setPriority(NotificationCompat.PRIORITY_MIN)
+            .build()
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            startForeground(1, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE)
+        } else {
+            startForeground(1, notification)
         }
     }
 }

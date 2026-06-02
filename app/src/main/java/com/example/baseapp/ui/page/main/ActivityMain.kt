@@ -3,34 +3,41 @@ package com.example.baseapp.ui.page.main
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.BatteryManager
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import androidx.activity.viewModels
 import com.bumptech.glide.Glide
 import com.example.baseapp.data.remote.Resource
 import com.example.baseapp.data.remote.dto.WidgetPack
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.example.baseapp.databinding.ActivityMainBinding
 import com.example.baseapp.ui.base.BaseActivity
+import com.example.baseapp.ui.receiver.BatteryReceiver
+import com.example.baseapp.ui.service.WidgetUpdateService
+import com.example.baseapp.ui.widget.WidgetAnimeGirl
 import com.example.baseapp.ui.widget.WidgetPackProvider
 import dagger.hilt.android.AndroidEntryPoint
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
-import android.app.AlarmManager
-import android.content.Context
-
-import android.os.Build
-import android.provider.Settings
 
 
 @AndroidEntryPoint
-class ActivityMain : BaseActivity<ActivityMainBinding>() {
+class ActivityMain : BaseActivity<ActivityMainBinding>(),
+    BatteryReceiver.OnBatteryChangedListener {
 
     private val viewModel: ViewModelMain by viewModels()
     private var currentPack: WidgetPack? = null
+
+    private val batteryReceiver = BatteryReceiver().apply {
+        listener = this@ActivityMain
+    }
 
     override fun getViewBinding(layoutInflater: LayoutInflater): ActivityMainBinding {
         return ActivityMainBinding.inflate(layoutInflater)
@@ -38,30 +45,36 @@ class ActivityMain : BaseActivity<ActivityMainBinding>() {
 
     override fun initData(intent: Intent) {
         viewModel.loadWidgetPack("69e4714f9708a69fde4102af")
-    }
 
-    override fun initView() {
-        // Hiển thị thời gian & pin thực ngay khi vào màn hình
-        updateDateTimeUi()
-        updateBatteryUi()
-        requestExactAlarmPermission()
-    }
-    private fun requestExactAlarmPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            val alarmManager =
-                getSystemService(Context.ALARM_SERVICE) as AlarmManager
-
-            if (!alarmManager.canScheduleExactAlarms()) {
-                startActivity(
-                    Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
-                )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.POST_NOTIFICATIONS), 101)
             }
         }
+
+        val serviceIntent = Intent(this, WidgetUpdateService::class.java)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(serviceIntent)
+        } else {
+            startService(serviceIntent)
+        }
     }
+
+
+    override fun initView() {
+
+        updateBatteryUi()
+
+    }
+
+
     override fun initAction() {
         binding.cardPreview.setOnClickListener {
             saveWidgetBackgroundUrl()
             pinWidget()
+        }
+        binding.imgAnimeGirl.setOnClickListener {
+            pinAnimeGirl()
         }
     }
 
@@ -73,9 +86,13 @@ class ActivityMain : BaseActivity<ActivityMainBinding>() {
                     Log.e("WidgetPack", "Error: ${result.message} (code=${result.code})")
                     showToast(result.message)
                 }
+
                 is Resource.Success -> {
                     currentPack = result.data
-                    Log.d("WidgetPack", "Success: name=${result.data.name}, widgets=${result.data.widgets.size}")
+                    Log.d(
+                        "WidgetPack",
+                        "Success: name=${result.data.name}, widgets=${result.data.widgets.size}"
+                    )
                     // Lưu URL vào SharedPrefs cho widget provider dùng khi pin
                     saveWidgetBackgroundUrl()
                     // Load ảnh nền từ API lên preview card
@@ -83,6 +100,29 @@ class ActivityMain : BaseActivity<ActivityMainBinding>() {
                 }
             }
         }
+    }
+
+    // ─── Đăng ký / hủy BatteryReceiver theo lifecycle ────────────────────────────
+
+    override fun onResume() {
+        super.onResume()
+        val filter = IntentFilter(Intent.ACTION_BATTERY_CHANGED)
+        registerReceiver(batteryReceiver, filter)
+        Log.d("ActivityMain", "BatteryReceiver registered")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        unregisterReceiver(batteryReceiver)
+        Log.d("ActivityMain", "BatteryReceiver unregistered")
+    }
+
+    // ─── Callback từ BatteryReceiver khi pin thay đổi ───────────────────────────
+
+    override fun onBatteryChanged(percent: Int, isCharging: Boolean) {
+        Log.d("ActivityMain", "onBatteryChanged: percent=$percent, isCharging=$isCharging")
+        binding.batteryProgress.progress = percent
+        binding.imgCharging.visibility = if (isCharging) View.VISIBLE else View.GONE
     }
 
     // ─── Load ảnh nền từ API vào card preview ──────────────────────────────────
@@ -121,34 +161,33 @@ class ActivityMain : BaseActivity<ActivityMainBinding>() {
         }
     }
 
-    // ─── Cập nhật pin thực ──────────────────────────────────────────────────────
+    private fun pinAnimeGirl() {
+        val appWidgetManager = AppWidgetManager.getInstance(this)
+        val provider = ComponentName(this, WidgetAnimeGirl::class.java)
+        if (appWidgetManager.isRequestPinAppWidgetSupported) {
+            val callbackIntent = Intent(this, WidgetAnimeGirl::class.java)
+                .setAction(WidgetAnimeGirl.ACTION_PINNED)
+            val flags = PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            val successCallback = PendingIntent.getBroadcast(this, 0, callbackIntent, flags)
+            appWidgetManager.requestPinAppWidget(provider, null, successCallback)
+        } else {
+            showToast("Launcher không hỗ trợ pin widget")
+        }
+    }
+
+    // ─── Cập nhật pin thực (lần đầu mở Activity) ───────
 
     private fun updateBatteryUi() {
         val batteryIntent = registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
-        val level = batteryIntent?.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) ?: -1
-        val scale = batteryIntent?.getIntExtra(BatteryManager.EXTRA_SCALE, -1) ?: -1
-        val percent = if (level >= 0 && scale > 0) (level * 100 / scale) else 0
+        val status = batteryIntent?.getIntExtra(BatteryManager.EXTRA_STATUS, -1) ?: -1
+        val isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING ||
+                status == BatteryManager.BATTERY_STATUS_FULL
+        binding.imgCharging.visibility = if (isCharging) View.VISIBLE else View.GONE
 
-        binding.batteryProgress.progress = percent
-        binding.batteryPercent.text = "$percent%"
-
-        // Màu text pin theo mức sạc
-        binding.batteryPercent.setTextColor(
-            when {
-                percent <= 20 -> android.graphics.Color.parseColor("#FF4444") // Đỏ
-                percent <= 50 -> android.graphics.Color.parseColor("#FFA500") // Cam
-                else -> android.graphics.Color.WHITE
-            }
-        )
-    }
-
-    // ─── Cập nhật giờ/ngày thực ─────────────────────────────────────────────────
-
-    private fun updateDateTimeUi() {
-        val now = Date()
-        binding.tvTime.text = SimpleDateFormat("HH:mm", Locale.getDefault()).format(now)
-        binding.tvWeekDay.text = SimpleDateFormat("EEEE", Locale.getDefault()).format(now)
-        binding.tvMonthDay.text = SimpleDateFormat("MMMM d", Locale.getDefault()).format(now)
+//        lấy phần trăm pin để tính toán % của progress bar
+        val batteryManager = getSystemService(Context.BATTERY_SERVICE) as BatteryManager
+        val batteryLevel = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY)
+        binding.batteryProgress.progress = batteryLevel
     }
 
     // ─── Lưu background URL cho WidgetPackProvider ──────────────────────────────
@@ -161,10 +200,11 @@ class ActivityMain : BaseActivity<ActivityMainBinding>() {
             ?: pack.preview.takeIf { it.isNotBlank() }
 
         if (bgUrl != null) {
-            Log.d("WidgetPack", "Saving widget background URL: $bgUrl")
+
             WidgetPackProvider.saveBackgroundUrl(this, bgUrl)
         } else {
             Log.w("WidgetPack", "No background URL found in widget pack")
         }
     }
+
 }

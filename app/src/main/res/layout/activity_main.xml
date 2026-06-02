@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-<!--    như đ xem preview thôi-->
+    <!--    như đ xem preview thôi-->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/viewInfo"
         android:layout_width="match_parent"
@@ -18,8 +19,7 @@
             android:id="@+id/cardPreview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:cardCornerRadius="20dp"
-            >
+            app:cardCornerRadius="20dp">
 
             <ImageView
                 android:id="@+id/imgPreview"
@@ -27,7 +27,8 @@
                 android:layout_height="match_parent"
                 android:contentDescription="@string/app_name"
                 android:scaleType="centerCrop"
-              android:src="@drawable/img_backgroud" />
+                android:src="@drawable/img_backgroud" />
+
         </com.google.android.material.card.MaterialCardView>
 
         <FrameLayout
@@ -51,15 +52,14 @@
                 android:progress="80"
                 android:progressDrawable="@drawable/battery_progress" />
 
-            <TextView
-                android:id="@+id/batteryPercent"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <ImageView
+                android:id="@+id/imgCharging"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
                 android:layout_gravity="center"
-                android:text="80%"
-                android:textColor="#FFFFFF"
-                android:textSize="10sp"
-                android:textStyle="bold" />
+                android:src="@drawable/ic_lightning"
+                android:visibility="gone"
+                tools:visibility="visible" />
         </FrameLayout>
 
         <View
@@ -72,53 +72,56 @@
             app:layout_constraintStart_toEndOf="@id/batteryBody"
             app:layout_constraintTop_toTopOf="@id/batteryBody" />
 
-        <TextView
+        <TextClock
             android:id="@+id/tvTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginTop="16dp"
-            android:text="11:58"
-            android:textColor="@color/color_black"
-            android:textSize="46sp"
-            android:textStyle="bold"
+            android:format12Hour="hh:mm"
+            android:format24Hour="HH:mm"
             android:shadowColor="#66000000"
             android:shadowDx="1"
             android:shadowDy="1"
             android:shadowRadius="4"
+            android:textColor="@color/color_black"
+            android:textSize="46sp"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
+        <TextClock
             android:id="@+id/tvWeekDay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:text="Wednesday"
-            android:textColor="@color/color_black"
-            android:textSize="22sp"
-            android:textStyle="bold"
+            android:format12Hour="EEEE"
+            android:format24Hour="EEEE"
             android:shadowColor="#66000000"
             android:shadowDx="1"
             android:shadowDy="1"
             android:shadowRadius="4"
+            android:textColor="@color/color_black"
+            android:textSize="22sp"
+            android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/tvMonthDay"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <TextView
+        <TextClock
             android:id="@+id/tvMonthDay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginBottom="14dp"
-            android:text="March 9"
-            android:textColor="@color/color_black"
-            android:textSize="14sp"
-            android:textStyle="bold"
+            android:format12Hour="MMMM d"
+            android:format24Hour="MMMM d"
             android:shadowColor="#66000000"
             android:shadowDx="1"
             android:shadowDy="1"
             android:shadowRadius="4"
+            android:textColor="@color/color_black"
+            android:textSize="14sp"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -128,5 +131,17 @@
             android:layout_height="wrap_content"
             app:constraint_referenced_ids="tvTime,tvWeekDay,tvMonthDay" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!--    anime girl-->
+    <ImageView
+        android:id="@+id/imgAnimeGirl"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="44dp"
+        android:src="@drawable/img_anime_girl"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.051"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/viewInfo" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

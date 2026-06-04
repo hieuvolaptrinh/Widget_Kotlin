@@ -22,6 +22,8 @@ import kotlin.concurrent.thread
 
 class WidgetPackProvider : AppWidgetProvider() {
 
+
+
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
         Log.d("Widget", "onReceive action = ${intent.action}")
@@ -98,7 +100,7 @@ class WidgetPackProvider : AppWidgetProvider() {
 
         // ─── Cache file ───────────────────────────────────────────────────────────
 
-        private fun getCacheFile(context: Context) = File(context.cacheDir, BG_CACHE_FILE)
+        private fun getCacheFile(context: Context) = File(context.filesDir, BG_CACHE_FILE)
 
         private fun loadCachedBitmap(context: Context): Bitmap? {
             if (cachedBitmap != null) return cachedBitmap

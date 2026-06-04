@@ -1,31 +1,38 @@
 package com.example.baseapp.ui.page.main
 
+import android.Manifest
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageManager
 import android.os.BatteryManager
+import android.os.Build
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import androidx.activity.viewModels
-import com.bumptech.glide.Glide
-import com.example.baseapp.data.remote.Resource
-import com.example.baseapp.data.remote.dto.WidgetPack
-import android.Manifest
-import android.content.pm.PackageManager
-import android.os.Build
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
+import com.bumptech.glide.Glide
+import com.example.baseapp.Constants
+import com.example.baseapp.R
+import com.example.baseapp.data.remote.Resource
+import com.example.baseapp.data.remote.dto.WidgetPack
 import com.example.baseapp.databinding.ActivityMainBinding
 import com.example.baseapp.ui.base.BaseActivity
 import com.example.baseapp.ui.receiver.BatteryReceiver
 import com.example.baseapp.ui.service.WidgetUpdateService
-import com.example.baseapp.ui.widget.WidgetAnimeGirl
+import com.example.baseapp.ui.widget.WidgetAnimeGirlProvider
+import com.example.baseapp.ui.widget.WidgetCatProvider
 import com.example.baseapp.ui.widget.WidgetPackProvider
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
@@ -39,6 +46,16 @@ class ActivityMain : BaseActivity<ActivityMainBinding>(),
         listener = this@ActivityMain
     }
 
+
+    private val previewCatJob = listOf(
+        R.drawable.img_cat_1,
+        R.drawable.img_cat_2,
+        R.drawable.img_cat_3,
+    )
+    private var currentIndex = 0
+    private var previewJob: Job? = null
+
+
     override fun getViewBinding(layoutInflater: LayoutInflater): ActivityMainBinding {
         return ActivityMainBinding.inflate(layoutInflater)
     }
@@ -47,8 +64,16 @@ class ActivityMain : BaseActivity<ActivityMainBinding>(),
         viewModel.loadWidgetPack("69e4714f9708a69fde4102af")
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.POST_NOTIFICATIONS), 101)
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                    101
+                )
             }
         }
 
@@ -62,9 +87,8 @@ class ActivityMain : BaseActivity<ActivityMainBinding>(),
 
 
     override fun initView() {
-
         updateBatteryUi()
-
+        startPreviewAnimation()
     }
 
 
@@ -75,6 +99,32 @@ class ActivityMain : BaseActivity<ActivityMainBinding>(),
         }
         binding.imgAnimeGirl.setOnClickListener {
             pinAnimeGirl()
+        }
+
+        binding.widgetCat.setOnClickListener {
+            pinCat()
+        }
+    }
+
+
+    private fun startPreviewAnimation() {
+
+        previewJob?.cancel()
+
+        previewJob = lifecycleScope.launch {
+
+            while (true) {
+
+                Glide.with(this@ActivityMain)
+                    .load(previewCatJob[currentIndex])
+                    .centerCrop()
+                    .into(binding.imgCat)
+
+                currentIndex =
+                    (currentIndex + 1) % previewCatJob.size
+
+                delay(1000)
+            }
         }
     }
 
@@ -163,10 +213,24 @@ class ActivityMain : BaseActivity<ActivityMainBinding>(),
 
     private fun pinAnimeGirl() {
         val appWidgetManager = AppWidgetManager.getInstance(this)
-        val provider = ComponentName(this, WidgetAnimeGirl::class.java)
+        val provider = ComponentName(this, WidgetAnimeGirlProvider::class.java)
         if (appWidgetManager.isRequestPinAppWidgetSupported) {
-            val callbackIntent = Intent(this, WidgetAnimeGirl::class.java)
-                .setAction(WidgetAnimeGirl.ACTION_PINNED)
+            val callbackIntent = Intent(this, WidgetAnimeGirlProvider::class.java)
+                .setAction(Constants.ACTION_PINNED)
+            val flags = PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            val successCallback = PendingIntent.getBroadcast(this, 0, callbackIntent, flags)
+            appWidgetManager.requestPinAppWidget(provider, null, successCallback)
+        } else {
+            showToast("Launcher không hỗ trợ pin widget")
+        }
+    }
+
+    private fun pinCat() {
+        val appWidgetManager = AppWidgetManager.getInstance(this)
+        val provider = ComponentName(this, WidgetCatProvider::class.java)
+        if (appWidgetManager.isRequestPinAppWidgetSupported) {
+            val callbackIntent = Intent(this, WidgetCatProvider::class.java)
+                .setAction(Constants.ACTION_PINNED)
             val flags = PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             val successCallback = PendingIntent.getBroadcast(this, 0, callbackIntent, flags)
             appWidgetManager.requestPinAppWidget(provider, null, successCallback)
@@ -207,4 +271,8 @@ class ActivityMain : BaseActivity<ActivityMainBinding>(),
         }
     }
 
+    override fun onDestroy() {
+        previewJob?.cancel()
+        super.onDestroy()
+    }
 }

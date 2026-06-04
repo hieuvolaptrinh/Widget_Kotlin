@@ -12,26 +12,36 @@ import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import com.example.baseapp.ui.receiver.BatteryReceiver
+import com.example.baseapp.ui.widget.WidgetCatProvider
 import com.example.baseapp.ui.widget.WidgetPackProvider
 
 class WidgetUpdateService : Service() {
 
-    private val batteryReceiver = BatteryReceiver().apply {
-        listener = object : BatteryReceiver.OnBatteryChangedListener {
-            override fun onBatteryChanged(percent: Int, isCharging: Boolean) {
-                // WidgetPackProvider handles updating all instances of the battery widget
-                WidgetPackProvider.updateBattery(this@WidgetUpdateService, percent, isCharging)
+    private val batteryReceiver =
+            BatteryReceiver().apply {
+                listener =
+                        object : BatteryReceiver.OnBatteryChangedListener {
+                            override fun onBatteryChanged(percent: Int, isCharging: Boolean) {
+                                // WidgetPackProvider handles updating all instances of the battery
+                                // widget
+                                WidgetPackProvider.updateBattery(
+                                        this@WidgetUpdateService,
+                                        percent,
+                                        isCharging
+                                )
+                            }
+                        }
             }
-        }
-    }
 
     override fun onCreate() {
         super.onCreate()
         startForegroundService()
-        
-        // Đăng ký BatteryReceiver để lắng nghe thay đổi pin liên tục (kể cả khi tắt màn hình/app bị kill)
+
         val filter = IntentFilter(Intent.ACTION_BATTERY_CHANGED)
         registerReceiver(batteryReceiver, filter)
+
+        // Không khởi động scheduler ở đây
+        // Scheduler sẽ tự động khởi động từ WidgetCatProvider khi widget được pin
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -42,6 +52,9 @@ class WidgetUpdateService : Service() {
     override fun onDestroy() {
         super.onDestroy()
         unregisterReceiver(batteryReceiver)
+
+        // Dừng scheduler khi service bị destroy
+        WidgetCatProvider.stopScheduler()
     }
 
     override fun onBind(intent: Intent?): IBinder? {
@@ -51,21 +64,24 @@ class WidgetUpdateService : Service() {
     private fun startForegroundService() {
         val channelId = "widget_updater_channel"
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                channelId,
-                "Widget Update Service",
-                NotificationManager.IMPORTANCE_MIN // IMPORTANCE_MIN để giảm thiểu độ phiền phức của thông báo
-            )
+            val channel =
+                    NotificationChannel(
+                            channelId,
+                            "Widget Update Service",
+                            NotificationManager
+                                    .IMPORTANCE_MIN // IMPORTANCE_MIN để giảm thiểu độ phiền phức
+                            // của thông báo
+                            )
             val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             manager.createNotificationChannel(channel)
         }
-        val notification: Notification = NotificationCompat.Builder(this, channelId)
-            .setContentTitle("")
-            .setContentText("")
-            .setSmallIcon(com.example.baseapp.R.mipmap.ic_launcher)
-            .setPriority(NotificationCompat.PRIORITY_MIN)
-            .build()
-
+        val notification: Notification =
+                NotificationCompat.Builder(this, channelId)
+                        .setContentTitle("")
+                        .setContentText("")
+                        .setSmallIcon(com.example.baseapp.R.mipmap.ic_launcher)
+                        .setPriority(NotificationCompat.PRIORITY_MIN)
+                        .build()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             startForeground(1, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE)

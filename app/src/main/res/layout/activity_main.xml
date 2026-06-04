@@ -144,4 +144,44 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/viewInfo" />
 
+    <!--    con mèo nhỏ -->
+    <!-- Ảnh -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/widgetCat"
+        app:layout_constraintStart_toEndOf="@id/imgAnimeGirl"
+        app:layout_constraintTop_toBottomOf="@id/viewInfo">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/imgCat"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="44dp"
+            android:elevation="2dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/img_cat_2"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:shapeAppearanceOverlay="@style/Rounded40"
+
+            app:strokeColor="@color/colorAccent"
+            app:strokeWidth="2dp" />
+
+        <!-- Khung PNG -->
+        <ImageView
+            android:id="@+id/imgCatFrame"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:clickable="false"
+            android:focusable="false"
+            android:src="@drawable/img_bg"
+            app:layout_constraintBottom_toBottomOf="@id/imgCat"
+            app:layout_constraintEnd_toEndOf="@id/imgCat"
+            app:layout_constraintStart_toStartOf="@id/imgCat"
+            app:layout_constraintTop_toTopOf="@id/imgCat" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

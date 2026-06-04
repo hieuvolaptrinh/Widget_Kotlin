@@ -8,8 +8,8 @@ import android.content.Intent
 import android.widget.RemoteViews
 import com.example.baseapp.R
 import kotlin.concurrent.thread
-
-class WidgetAnimeGirl : AppWidgetProvider() {
+import com.example.baseapp.Constants.ACTION_PINNED
+class WidgetAnimeGirlProvider : AppWidgetProvider() {
 
     override fun onUpdate(
         context: Context?,
@@ -28,7 +28,7 @@ class WidgetAnimeGirl : AppWidgetProvider() {
                 thread {
                     try {
                         val manager = AppWidgetManager.getInstance(context)
-                        val provider = ComponentName(context!!, WidgetAnimeGirl::class.java)
+                        val provider = ComponentName(context!!, WidgetAnimeGirlProvider::class.java)
                         val ids = manager.getAppWidgetIds(provider)
                         for (id in ids) updateAppWidgetWithImage(context, manager, id)
                     } catch (e: Exception) {
@@ -42,7 +42,7 @@ class WidgetAnimeGirl : AppWidgetProvider() {
     }
 
     companion object {
-        const val ACTION_PINNED = "com.example.baseapp.widget.ACTION_PINNED"
+
 
         fun updateAppWidgetWithImage(
             context: Context,

@@ -13,6 +13,7 @@ import android.os.Build
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.ImageView
 import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -27,6 +28,7 @@ import com.example.baseapp.ui.base.BaseActivity
 import com.example.baseapp.ui.receiver.BatteryReceiver
 import com.example.baseapp.ui.service.WidgetUpdateService
 import com.example.baseapp.ui.widget.WidgetAnimatedProvider
+import com.example.baseapp.ui.widget.WidgetAnimatedReviewProvider
 import com.example.baseapp.ui.widget.WidgetAnimeGirlProvider
 import com.example.baseapp.ui.widget.WidgetCatProvider
 import com.example.baseapp.ui.widget.WidgetPackProvider
@@ -85,7 +87,15 @@ class ActivityMain : BaseActivity<ActivityMainBinding>(), BatteryReceiver.OnBatt
 
     override fun initView() {
         updateBatteryUi()
-        loadAnimatedImage()
+        loadAnimatedImage(
+            binding.imgAnimated,
+            "https://candy-storage.s3.ap-southeast-1.amazonaws.com/themes/uploads/1c846501-5b64-4a37-ae25-32c76ad36150.png"
+        )
+
+        loadAnimatedImage(
+            binding.imgAnimatedReview,
+            "https://candy-storage.s3.ap-southeast-1.amazonaws.com/themes/uploads/1c846501-5b64-4a37-ae25-32c76ad36150.png"
+        )
         startPreviewAnimation()
 
     }
@@ -105,6 +115,9 @@ class ActivityMain : BaseActivity<ActivityMainBinding>(), BatteryReceiver.OnBatt
         }
         binding.imgAnimated.setOnClickListener {
             pinAnimated()
+        }
+        binding.imgAnimatedReview.setOnClickListener {
+            pinAnimatedReview()
         }
     }
 
@@ -151,13 +164,12 @@ class ActivityMain : BaseActivity<ActivityMainBinding>(), BatteryReceiver.OnBatt
         }
     }
 
-    private fun loadAnimatedImage() {
-        val imageUrl =
-            "https://candy-storage.s3.ap-southeast-1.amazonaws.com/themes/uploads/1c846501-5b64-4a37-ae25-32c76ad36150.png"
+    private fun loadAnimatedImage(imageView: ImageView, url: String) {
+
         Glide.with(this)
-            .load(imageUrl)
+            .load(url)
             // glide-plugin của APNG4Android sẽ tự bắt APNG và render animation.
-            .into(binding.imgAnimated)
+            .into(imageView)
     }
 
     override fun onResume() {
@@ -235,6 +247,23 @@ class ActivityMain : BaseActivity<ActivityMainBinding>(), BatteryReceiver.OnBatt
         if (appWidgetManager.isRequestPinAppWidgetSupported) {
             val callbackIntent =
                 Intent(this, WidgetAnimatedProvider::class.java).setAction(Constants.ACTION_PINNED)
+            val flags = PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            val successCallback = PendingIntent.getBroadcast(this, 0, callbackIntent, flags)
+            appWidgetManager.requestPinAppWidget(provider, null, successCallback)
+        } else {
+            showToast("Launcher không hỗ trợ pin widget")
+        }
+    }
+
+    private fun pinAnimatedReview() {
+        val appWidgetManager = AppWidgetManager.getInstance(this)
+        val provider = ComponentName(this, WidgetAnimatedReviewProvider::class.java)
+        if (appWidgetManager.isRequestPinAppWidgetSupported) {
+            val callbackIntent =
+                Intent(
+                    this,
+                    WidgetAnimatedReviewProvider::class.java
+                ).setAction(Constants.ACTION_PINNED)
             val flags = PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             val successCallback = PendingIntent.getBroadcast(this, 0, callbackIntent, flags)
             appWidgetManager.requestPinAppWidget(provider, null, successCallback)

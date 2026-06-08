@@ -21,6 +21,7 @@ import android.util.TypedValue
 import android.widget.RemoteViews
 import com.example.baseapp.Constants
 import com.example.baseapp.R
+import com.example.baseapp.extensions.dpToPx
 import com.example.baseapp.ui.service.WidgetUpdateService
 import java.io.File
 import java.net.HttpURLConnection
@@ -82,61 +83,42 @@ class WidgetAnimatedProvider : AppWidgetProvider() {
 
         fun startScheduler(context: Context) {
             val appContext = context.applicationContext
-            val widgetIds = getWidgetIds(appContext)
+            val file = File(appContext.filesDir, IMAGE_FILE_NAME)
 
-            if (widgetIds.isEmpty()) {
+            if (getWidgetIds(appContext).isEmpty()) {
                 stopScheduler()
                 return
             }
 
-            val file = File(appContext.filesDir, IMAGE_FILE_NAME)
             if (!file.exists()) {
-                updateWidgets(appContext, widgetIds, null)
+                updateWidgets(appContext, null)
                 downloadImage(appContext) { startScheduler(appContext) }
                 return
             }
 
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
-                updateWidgets(appContext, widgetIds, null)
+                updateWidgets(appContext, null)
                 return
             }
 
             stopScheduler()
             handler = Handler(Looper.getMainLooper())
-            animatedDrawable =
-                    try {
-                        ImageDecoder.decodeDrawable(ImageDecoder.createSource(file))
-                                as? AnimatedImageDrawable
-                    } catch (e: Exception) {
-                        Log.e("WidgetAnimated", "Error decoding animated image", e)
-                        null
-                    }
 
-            val drawable = animatedDrawable
+            val drawable = decodeAnimatedDrawable(file)
             if (drawable == null) {
-                updateWidgets(appContext, widgetIds, null)
+                updateWidgets(appContext, null)
                 return
             }
 
-            drawable.callback =
-                    object : Drawable.Callback {
-                        override fun invalidateDrawable(who: Drawable) = Unit
-
-                        override fun scheduleDrawable(who: Drawable, what: Runnable, `when`: Long) {
-                            handler?.postAtTime(what, `when`)
-                        }
-
-                        override fun unscheduleDrawable(who: Drawable, what: Runnable) {
-                            handler?.removeCallbacks(what)
-                        }
-                    }
+            animatedDrawable = drawable
+            drawable.callback = drawableCallback()
             drawable.repeatCount = AnimatedImageDrawable.REPEAT_INFINITE
             drawable.start()
 
             frameRunnable =
                     object : Runnable {
                         override fun run() {
-                            updateWidgets(appContext, getWidgetIds(appContext), drawable)
+                            updateWidgets(appContext, drawable)
                             handler?.postDelayed(this, FRAME_DELAY_MS)
                         }
                     }
@@ -144,11 +126,37 @@ class WidgetAnimatedProvider : AppWidgetProvider() {
         }
 
         fun stopScheduler() {
-            animatedDrawable?.stop()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                animatedDrawable?.stop()
+            }
             frameRunnable?.let { handler?.removeCallbacks(it) }
             animatedDrawable = null
             frameRunnable = null
             handler = null
+        }
+
+        private fun updateWidgets(context: Context, animatedFrame: Drawable?) {
+            val widgetIds = getWidgetIds(context)
+            if (widgetIds.isEmpty()) {
+                stopScheduler()
+                return
+            }
+
+            val appWidgetManager = AppWidgetManager.getInstance(context)
+            widgetIds.forEach { widgetId ->
+                val views = RemoteViews(context.packageName, R.layout.widget_animated_png)
+                val bitmap =
+                        animatedFrame?.let {
+                            drawToWidgetBitmap(context, appWidgetManager, widgetId, it)
+                        } ?: decodeStaticBitmap(context, appWidgetManager, widgetId)
+
+                if (bitmap != null) {
+                    views.setImageViewBitmap(R.id.imgAnimated, bitmap)
+                } else {
+                    views.setImageViewResource(R.id.imgAnimated, R.drawable.img_anime_girl)
+                }
+                appWidgetManager.updateAppWidget(widgetId, views)
+            }
         }
 
         private fun downloadImage(context: Context, onFinished: (() -> Unit)? = null) {
@@ -176,26 +184,14 @@ class WidgetAnimatedProvider : AppWidgetProvider() {
             }
         }
 
-        private fun updateWidgets(context: Context, widgetIds: IntArray, drawable: Drawable?) {
-            val appWidgetManager = AppWidgetManager.getInstance(context)
+        private fun decodeAnimatedDrawable(file: File): AnimatedImageDrawable? {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) return null
 
-            if (widgetIds.isEmpty()) {
-                stopScheduler()
-                return
-            }
-
-            widgetIds.forEach { widgetId ->
-                val views = RemoteViews(context.packageName, R.layout.widget_animated_png)
-                val bitmap =
-                        drawable?.let { drawToWidgetBitmap(context, appWidgetManager, widgetId, it) }
-                                ?: decodeStaticBitmap(context, appWidgetManager, widgetId)
-
-                if (bitmap != null) {
-                    views.setImageViewBitmap(R.id.imgAnimated, bitmap)
-                } else {
-                    views.setImageViewResource(R.id.imgAnimated, R.drawable.img_anime_girl)
-                }
-                appWidgetManager.updateAppWidget(widgetId, views)
+            return try {
+                ImageDecoder.decodeDrawable(ImageDecoder.createSource(file)) as? AnimatedImageDrawable
+            } catch (e: Exception) {
+                Log.e("WidgetAnimated", "Error decoding animated image", e)
+                null
             }
         }
 
@@ -255,18 +251,18 @@ class WidgetAnimatedProvider : AppWidgetProvider() {
             return bitmap
         }
 
-        private fun calculateInSampleSize(width: Int, height: Int, size: WidgetSize): Int {
-            var sampleSize = 1
-            val halfWidth = width / 2
-            val halfHeight = height / 2
+        private fun drawableCallback() =
+                object : Drawable.Callback {
+                    override fun invalidateDrawable(who: Drawable) = Unit
 
-            while (halfWidth / sampleSize >= size.width &&
-                    halfHeight / sampleSize >= size.height
-            ) {
-                sampleSize *= 2
-            }
-            return sampleSize
-        }
+                    override fun scheduleDrawable(who: Drawable, what: Runnable, `when`: Long) {
+                        handler?.postAtTime(what, `when`)
+                    }
+
+                    override fun unscheduleDrawable(who: Drawable, what: Runnable) {
+                        handler?.removeCallbacks(what)
+                    }
+                }
 
         private fun getWidgetIds(context: Context): IntArray =
                 AppWidgetManager.getInstance(context)
@@ -292,14 +288,18 @@ class WidgetAnimatedProvider : AppWidgetProvider() {
             return WidgetSize(widthDp.dpToPx(context), heightDp.dpToPx(context))
         }
 
-        private fun Int.dpToPx(context: Context): Int =
-                TypedValue.applyDimension(
-                                TypedValue.COMPLEX_UNIT_DIP,
-                                toFloat(),
-                                context.resources.displayMetrics
-                        )
-                        .toInt()
-                        .coerceAtLeast(1)
+        private fun calculateInSampleSize(width: Int, height: Int, size: WidgetSize): Int {
+            var sampleSize = 1
+            val halfWidth = width / 2
+            val halfHeight = height / 2
+
+            while (halfWidth / sampleSize >= size.width &&
+                    halfHeight / sampleSize >= size.height
+            ) {
+                sampleSize *= 2
+            }
+            return sampleSize
+        }
 
         private fun startWidgetService(context: Context) {
             val serviceIntent = Intent(context, WidgetUpdateService::class.java)

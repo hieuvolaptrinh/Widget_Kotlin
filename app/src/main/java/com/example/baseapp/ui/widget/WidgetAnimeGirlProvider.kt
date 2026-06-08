@@ -5,19 +5,14 @@ import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.widget.RemoteViews
+import com.example.baseapp.Constants.ACTION_PINNED
 import com.example.baseapp.R
 import kotlin.concurrent.thread
-import com.example.baseapp.Constants.ACTION_PINNED
+
 class WidgetAnimeGirlProvider : AppWidgetProvider() {
 
-    override fun onUpdate(
-        context: Context?,
-        appWidgetManager: AppWidgetManager?,
-        appWidgetIds: IntArray?
-    ) {
-        super.onUpdate(context, appWidgetManager, appWidgetIds)
-    }
 
     override fun onReceive(context: Context?, intent: Intent?) {
         super.onReceive(context, intent)
@@ -32,7 +27,7 @@ class WidgetAnimeGirlProvider : AppWidgetProvider() {
                         val ids = manager.getAppWidgetIds(provider)
                         for (id in ids) updateAppWidgetWithImage(context, manager, id)
                     } catch (e: Exception) {
-
+                        Log.d("Anime Girl", "")
                     } finally {
                         pendingResult.finish()
                     }

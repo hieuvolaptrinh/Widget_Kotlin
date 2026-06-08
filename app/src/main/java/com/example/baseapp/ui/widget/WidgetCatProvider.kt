@@ -5,12 +5,14 @@ import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.widget.RemoteViews
 import com.example.baseapp.Constants.ACTION_PINNED
 import com.example.baseapp.R
+import com.example.baseapp.ui.service.WidgetUpdateService
 
 class WidgetCatProvider : AppWidgetProvider() {
 
@@ -19,7 +21,8 @@ class WidgetCatProvider : AppWidgetProvider() {
 
         if (intent?.action == ACTION_PINNED && context != null) {
             Log.d("WidgetCatProvider", "Widget pinned, starting scheduler")
-            startScheduler(context)
+            startWidgetService(context)
+            startScheduler(context.applicationContext)
         }
     }
 
@@ -27,7 +30,8 @@ class WidgetCatProvider : AppWidgetProvider() {
         super.onEnabled(context)
         context?.let {
             Log.d("WidgetCatProvider", "First widget added, starting scheduler")
-            startScheduler(it)
+            startWidgetService(it)
+            startScheduler(it.applicationContext)
         }
     }
 
@@ -45,7 +49,8 @@ class WidgetCatProvider : AppWidgetProvider() {
         super.onUpdate(context, appWidgetManager, appWidgetIds)
         context?.let {
             Log.d("WidgetCatProvider", "onUpdate called for ${appWidgetIds?.size} widgets")
-            startScheduler(it)
+            startWidgetService(it)
+            startScheduler(it.applicationContext)
         }
     }
 
@@ -61,13 +66,25 @@ class WidgetCatProvider : AppWidgetProvider() {
 
         // Public methods để Service có thể gọi
         fun startScheduler(context: Context) {
+            val appContext = context.applicationContext
+            val appWidgetManager = AppWidgetManager.getInstance(appContext)
+            val widgetIds =
+                    appWidgetManager.getAppWidgetIds(
+                            ComponentName(appContext, WidgetCatProvider::class.java)
+                    )
+
+            if (widgetIds.isEmpty()) {
+                stopScheduler()
+                return
+            }
+
             stopScheduler() // Dừng scheduler cũ nếu có
 
             handler = Handler(Looper.getMainLooper())
             runnable =
                     object : Runnable {
                         override fun run() {
-                            updateAllCatWidgets(context)
+                            updateAllCatWidgets(appContext)
                             handler?.postDelayed(this, 1000) // Lặp lại sau 1 giây
                         }
                     }
@@ -120,6 +137,15 @@ class WidgetCatProvider : AppWidgetProvider() {
             views.setImageViewResource(R.id.imgCat, frames[frameIndex])
 
             appWidgetManager.updateAppWidget(appWidgetId, views)
+        }
+
+        private fun startWidgetService(context: Context) {
+            val serviceIntent = Intent(context, WidgetUpdateService::class.java)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                context.startForegroundService(serviceIntent)
+            } else {
+                context.startService(serviceIntent)
+            }
         }
     }
 }

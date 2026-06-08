@@ -4,6 +4,9 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
+import android.appwidget.AppWidgetManager
+import android.appwidget.AppWidgetProvider
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -13,13 +16,14 @@ import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import com.example.baseapp.ui.receiver.BatteryReceiver
 import com.example.baseapp.ui.widget.WidgetAnimatedProvider
+import com.example.baseapp.ui.widget.WidgetAnimatedReviewProvider
 import com.example.baseapp.ui.widget.WidgetCatProvider
 import com.example.baseapp.ui.widget.WidgetPackProvider
 
 class WidgetUpdateService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        WidgetAnimatedProvider.startScheduler(this)
+        startSchedulers()
         // START_STICKY để OS tự khởi động lại service nếu bị kill do thiếu RAM
         return START_STICKY
     }
@@ -47,7 +51,7 @@ class WidgetUpdateService : Service() {
         val filter = IntentFilter(Intent.ACTION_BATTERY_CHANGED)
         registerReceiver(batteryReceiver, filter)
 
-        WidgetAnimatedProvider.startScheduler(this)
+        startSchedulers()
     }
 
 
@@ -56,8 +60,7 @@ class WidgetUpdateService : Service() {
         unregisterReceiver(batteryReceiver)
 
         // Dừng scheduler khi service bị destroy
-        WidgetAnimatedProvider.stopScheduler()
-        WidgetCatProvider.stopScheduler()
+        stopSchedulers()
     }
 
     override fun onBind(intent: Intent?): IBinder? {
@@ -80,8 +83,8 @@ class WidgetUpdateService : Service() {
         }
         val notification: Notification =
                 NotificationCompat.Builder(this, channelId)
-                        .setContentTitle("")
-                        .setContentText("")
+                        .setContentTitle("Foreground service")
+                        .setContentText("Foreground service")
                         .setSmallIcon(com.example.baseapp.R.mipmap.ic_launcher)
                         .setPriority(NotificationCompat.PRIORITY_MIN)
                         .build()
@@ -91,5 +94,32 @@ class WidgetUpdateService : Service() {
         } else {
             startForeground(1, notification)
         }
+    }
+
+    private fun startSchedulers() {
+        if (hasWidget(WidgetAnimatedProvider::class.java)) {
+            WidgetAnimatedProvider.startScheduler(this)
+        }
+
+        if (hasWidget(WidgetCatProvider::class.java)) {
+            WidgetCatProvider.startScheduler(this)
+        }
+
+        if (hasWidget(WidgetAnimatedReviewProvider::class.java)) {
+            WidgetAnimatedReviewProvider.startScheduler(this)
+        }
+    }
+
+    private fun stopSchedulers() {
+        WidgetAnimatedProvider.stopScheduler()
+        WidgetCatProvider.stopScheduler()
+        WidgetAnimatedReviewProvider.stopScheduler()
+    }
+
+    private fun hasWidget(providerClass: Class<out AppWidgetProvider>): Boolean {
+        val widgetIds =
+                AppWidgetManager.getInstance(this)
+                        .getAppWidgetIds(ComponentName(this, providerClass))
+        return widgetIds.isNotEmpty()
     }
 }

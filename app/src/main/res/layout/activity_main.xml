@@ -147,9 +147,9 @@
     <!--    con mèo nhỏ -->
     <!-- Ảnh -->
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/widgetCat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/widgetCat"
         app:layout_constraintStart_toEndOf="@id/imgAnimeGirl"
         app:layout_constraintTop_toBottomOf="@id/viewInfo">
 
@@ -184,4 +184,12 @@
             app:layout_constraintTop_toTopOf="@id/imgCat" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <ImageView
+        android:id="@+id/imgAnimated"
+        android:layout_width="wrap_content"
+        android:layout_height="200dp"
+        android:scaleType="fitStart"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imgAnimeGirl"
+        tools:src="@drawable/img_anime_girl" />
 </androidx.constraintlayout.widget.ConstraintLayout>

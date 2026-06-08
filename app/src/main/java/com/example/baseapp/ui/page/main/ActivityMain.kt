@@ -26,6 +26,7 @@ import com.example.baseapp.databinding.ActivityMainBinding
 import com.example.baseapp.ui.base.BaseActivity
 import com.example.baseapp.ui.receiver.BatteryReceiver
 import com.example.baseapp.ui.service.WidgetUpdateService
+import com.example.baseapp.ui.widget.WidgetAnimatedProvider
 import com.example.baseapp.ui.widget.WidgetAnimeGirlProvider
 import com.example.baseapp.ui.widget.WidgetCatProvider
 import com.example.baseapp.ui.widget.WidgetPackProvider
@@ -36,8 +37,7 @@ import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
-class ActivityMain : BaseActivity<ActivityMainBinding>(),
-    BatteryReceiver.OnBatteryChangedListener {
+class ActivityMain : BaseActivity<ActivityMainBinding>(), BatteryReceiver.OnBatteryChangedListener {
 
     private val viewModel: ViewModelMain by viewModels()
     private var currentPack: WidgetPack? = null
@@ -65,14 +65,11 @@ class ActivityMain : BaseActivity<ActivityMainBinding>(),
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.POST_NOTIFICATIONS
+                    this, Manifest.permission.POST_NOTIFICATIONS
                 ) != PackageManager.PERMISSION_GRANTED
             ) {
                 ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(Manifest.permission.POST_NOTIFICATIONS),
-                    101
+                    this, arrayOf(Manifest.permission.POST_NOTIFICATIONS), 101
                 )
             }
         }
@@ -88,7 +85,9 @@ class ActivityMain : BaseActivity<ActivityMainBinding>(),
 
     override fun initView() {
         updateBatteryUi()
+        loadAnimatedImage()
         startPreviewAnimation()
+
     }
 
 
@@ -104,6 +103,9 @@ class ActivityMain : BaseActivity<ActivityMainBinding>(),
         binding.widgetCat.setOnClickListener {
             pinCat()
         }
+        binding.imgAnimated.setOnClickListener {
+            pinAnimated()
+        }
     }
 
 
@@ -115,13 +117,10 @@ class ActivityMain : BaseActivity<ActivityMainBinding>(),
 
             while (true) {
 
-                Glide.with(this@ActivityMain)
-                    .load(previewCatJob[currentIndex])
-                    .centerCrop()
+                Glide.with(this@ActivityMain).load(previewCatJob[currentIndex]).centerCrop()
                     .into(binding.imgCat)
 
-                currentIndex =
-                    (currentIndex + 1) % previewCatJob.size
+                currentIndex = (currentIndex + 1) % previewCatJob.size
 
                 delay(1000)
             }
@@ -152,19 +151,26 @@ class ActivityMain : BaseActivity<ActivityMainBinding>(),
         }
     }
 
-    // ─── Đăng ký / hủy BatteryReceiver theo lifecycle ────────────────────────────
+    private fun loadAnimatedImage() {
+        val imageUrl =
+            "https://candy-storage.s3.ap-southeast-1.amazonaws.com/themes/uploads/1c846501-5b64-4a37-ae25-32c76ad36150.png"
+        Glide.with(this)
+            .load(imageUrl)
+            // glide-plugin của APNG4Android sẽ tự bắt APNG và render animation.
+            .into(binding.imgAnimated)
+    }
 
     override fun onResume() {
         super.onResume()
         val filter = IntentFilter(Intent.ACTION_BATTERY_CHANGED)
         registerReceiver(batteryReceiver, filter)
-        Log.d("ActivityMain", "BatteryReceiver registered")
+
     }
 
     override fun onPause() {
         super.onPause()
         unregisterReceiver(batteryReceiver)
-        Log.d("ActivityMain", "BatteryReceiver unregistered")
+
     }
 
     // ─── Callback từ BatteryReceiver khi pin thay đổi ───────────────────────────
@@ -179,17 +185,14 @@ class ActivityMain : BaseActivity<ActivityMainBinding>(),
 
     private fun loadPreviewBackground(pack: WidgetPack) {
         // Lấy backgroundUrl từ widget đầu tiên (widget type "date") → fallback pack.background → pack.preview
-        val bgUrl = pack.widgets.firstOrNull()?.imageUrl?.firstOrNull()?.backgroundUrl
-            ?.takeIf { it.isNotBlank() }
-            ?: pack.background.takeIf { it.isNotBlank() }
-            ?: pack.preview.takeIf { it.isNotBlank() }
+        val bgUrl =
+            pack.widgets.firstOrNull()?.imageUrl?.firstOrNull()?.backgroundUrl?.takeIf { it.isNotBlank() }
+                ?: pack.background.takeIf { it.isNotBlank() }
+                ?: pack.preview.takeIf { it.isNotBlank() }
 
         if (bgUrl != null) {
             Log.d("WidgetPack", "Loading preview background: $bgUrl")
-            Glide.with(this)
-                .load(bgUrl)
-                .centerCrop()
-                .into(binding.imgPreview)
+            Glide.with(this).load(bgUrl).centerCrop().into(binding.imgPreview)
         } else {
             Log.w("WidgetPack", "No background URL found")
         }
@@ -201,8 +204,9 @@ class ActivityMain : BaseActivity<ActivityMainBinding>(),
         val appWidgetManager = AppWidgetManager.getInstance(this)
         val provider = ComponentName(this, WidgetPackProvider::class.java)
         if (appWidgetManager.isRequestPinAppWidgetSupported) {
-            val callbackIntent = Intent(this, WidgetPackProvider::class.java)
-                .setAction(WidgetPackProvider.ACTION_PINNED)
+            val callbackIntent = Intent(
+                this, WidgetPackProvider::class.java
+            ).setAction(WidgetPackProvider.ACTION_PINNED)
             val flags = PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             val successCallback = PendingIntent.getBroadcast(this, 0, callbackIntent, flags)
             appWidgetManager.requestPinAppWidget(provider, null, successCallback)
@@ -215,8 +219,22 @@ class ActivityMain : BaseActivity<ActivityMainBinding>(),
         val appWidgetManager = AppWidgetManager.getInstance(this)
         val provider = ComponentName(this, WidgetAnimeGirlProvider::class.java)
         if (appWidgetManager.isRequestPinAppWidgetSupported) {
-            val callbackIntent = Intent(this, WidgetAnimeGirlProvider::class.java)
-                .setAction(Constants.ACTION_PINNED)
+            val callbackIntent =
+                Intent(this, WidgetAnimeGirlProvider::class.java).setAction(Constants.ACTION_PINNED)
+            val flags = PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            val successCallback = PendingIntent.getBroadcast(this, 0, callbackIntent, flags)
+            appWidgetManager.requestPinAppWidget(provider, null, successCallback)
+        } else {
+            showToast("Launcher không hỗ trợ pin widget")
+        }
+    }
+
+    private fun pinAnimated() {
+        val appWidgetManager = AppWidgetManager.getInstance(this)
+        val provider = ComponentName(this, WidgetAnimatedProvider::class.java)
+        if (appWidgetManager.isRequestPinAppWidgetSupported) {
+            val callbackIntent =
+                Intent(this, WidgetAnimatedProvider::class.java).setAction(Constants.ACTION_PINNED)
             val flags = PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             val successCallback = PendingIntent.getBroadcast(this, 0, callbackIntent, flags)
             appWidgetManager.requestPinAppWidget(provider, null, successCallback)
@@ -229,8 +247,8 @@ class ActivityMain : BaseActivity<ActivityMainBinding>(),
         val appWidgetManager = AppWidgetManager.getInstance(this)
         val provider = ComponentName(this, WidgetCatProvider::class.java)
         if (appWidgetManager.isRequestPinAppWidgetSupported) {
-            val callbackIntent = Intent(this, WidgetCatProvider::class.java)
-                .setAction(Constants.ACTION_PINNED)
+            val callbackIntent =
+                Intent(this, WidgetCatProvider::class.java).setAction(Constants.ACTION_PINNED)
             val flags = PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             val successCallback = PendingIntent.getBroadcast(this, 0, callbackIntent, flags)
             appWidgetManager.requestPinAppWidget(provider, null, successCallback)
@@ -244,8 +262,8 @@ class ActivityMain : BaseActivity<ActivityMainBinding>(),
     private fun updateBatteryUi() {
         val batteryIntent = registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
         val status = batteryIntent?.getIntExtra(BatteryManager.EXTRA_STATUS, -1) ?: -1
-        val isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING ||
-                status == BatteryManager.BATTERY_STATUS_FULL
+        val isCharging =
+            status == BatteryManager.BATTERY_STATUS_CHARGING || status == BatteryManager.BATTERY_STATUS_FULL
         binding.imgCharging.visibility = if (isCharging) View.VISIBLE else View.GONE
 
 //        lấy phần trăm pin để tính toán % của progress bar
@@ -258,10 +276,10 @@ class ActivityMain : BaseActivity<ActivityMainBinding>(),
 
     private fun saveWidgetBackgroundUrl() {
         val pack = currentPack ?: return
-        val bgUrl = pack.widgets.firstOrNull()?.imageUrl?.firstOrNull()?.backgroundUrl
-            ?.takeIf { it.isNotBlank() }
-            ?: pack.background.takeIf { it.isNotBlank() }
-            ?: pack.preview.takeIf { it.isNotBlank() }
+        val bgUrl =
+            pack.widgets.firstOrNull()?.imageUrl?.firstOrNull()?.backgroundUrl?.takeIf { it.isNotBlank() }
+                ?: pack.background.takeIf { it.isNotBlank() }
+                ?: pack.preview.takeIf { it.isNotBlank() }
 
         if (bgUrl != null) {
 

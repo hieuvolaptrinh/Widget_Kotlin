@@ -40,6 +40,18 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_img" />
         </receiver>
+        <!--        widget provider animated-->
+        <receiver
+            android:name=".ui.widget.WidgetAnimatedProvider"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.example.baseapp.widget.ACTION_PINNED" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_animated_png" />
+        </receiver>
         <!-- Widget Provider: CAT -->
         <receiver
             android:name=".ui.widget.WidgetCatProvider"
@@ -47,7 +59,6 @@
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="com.example.baseapp.widget.ACTION_PINNED" />
-
             </intent-filter>
             <meta-data
                 android:name="android.appwidget.provider"

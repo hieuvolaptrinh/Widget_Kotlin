@@ -12,10 +12,17 @@ import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import com.example.baseapp.ui.receiver.BatteryReceiver
+import com.example.baseapp.ui.widget.WidgetAnimatedProvider
 import com.example.baseapp.ui.widget.WidgetCatProvider
 import com.example.baseapp.ui.widget.WidgetPackProvider
 
 class WidgetUpdateService : Service() {
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        WidgetAnimatedProvider.startScheduler(this)
+        // START_STICKY để OS tự khởi động lại service nếu bị kill do thiếu RAM
+        return START_STICKY
+    }
 
     private val batteryReceiver =
             BatteryReceiver().apply {
@@ -40,20 +47,16 @@ class WidgetUpdateService : Service() {
         val filter = IntentFilter(Intent.ACTION_BATTERY_CHANGED)
         registerReceiver(batteryReceiver, filter)
 
-        // Không khởi động scheduler ở đây
-        // Scheduler sẽ tự động khởi động từ WidgetCatProvider khi widget được pin
+        WidgetAnimatedProvider.startScheduler(this)
     }
 
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        // START_STICKY để OS tự khởi động lại service nếu bị kill do thiếu RAM
-        return START_STICKY
-    }
 
     override fun onDestroy() {
         super.onDestroy()
         unregisterReceiver(batteryReceiver)
 
         // Dừng scheduler khi service bị destroy
+        WidgetAnimatedProvider.stopScheduler()
         WidgetCatProvider.stopScheduler()
     }
 

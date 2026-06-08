@@ -1,35 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="100dp"
-    android:layout_height="100dp"
-    android:clipChildren="true"
-    android:clipToPadding="true">
-    
-    <!-- Khung PNG overlay với background màu cam và padding để tạo viền -->
-    <FrameLayout
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_gravity="center"
-        android:background="#FF9800"
-        android:padding="3dp">
-        
-        <!-- Ảnh mèo bên trong viền cam -->
-        <ImageView
-            android:id="@+id/imgCat"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:src="@drawable/img_cat_2" />
-    </FrameLayout>
-    
+    android:layout_height="100dp">
+
     <!-- Frame overlay -->
     <ImageView
         android:id="@+id/imgCatFrame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clickable="false"
-        android:focusable="false"
         android:scaleType="fitXY"
         android:src="@drawable/img_bg" />
+
+    <!-- Ảnh mèo -->
+    <ImageView
+        android:id="@+id/imgCat"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_gravity="center"
+        android:scaleType="centerCrop"
+        android:src="@drawable/img_cat_2" />
 
 </FrameLayout>

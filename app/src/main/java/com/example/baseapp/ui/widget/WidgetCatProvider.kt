@@ -72,14 +72,11 @@ class WidgetCatProvider : AppWidgetProvider() {
                     appWidgetManager.getAppWidgetIds(
                             ComponentName(appContext, WidgetCatProvider::class.java)
                     )
-
             if (widgetIds.isEmpty()) {
                 stopScheduler()
                 return
             }
-
             stopScheduler() // Dừng scheduler cũ nếu có
-
             handler = Handler(Looper.getMainLooper())
             runnable =
                     object : Runnable {

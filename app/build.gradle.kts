@@ -102,8 +102,6 @@ dependencies {
 //    worker
     implementation("androidx.work:work-runtime-ktx:2.10.2")
 
-//    Apng4android
-
 }
 
 ksp {

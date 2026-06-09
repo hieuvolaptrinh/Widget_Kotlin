@@ -31,6 +31,7 @@ import com.example.baseapp.ui.service.WidgetUpdateService
 import com.example.baseapp.ui.widget.WidgetAnimatedProvider
 import com.example.baseapp.ui.widget.WidgetCatProvider
 import com.example.baseapp.ui.widget.WidgetCatViewFlipperProvider
+import com.example.baseapp.ui.widget.WidgetDailyImageProvider
 import com.example.baseapp.ui.widget.WidgetPackProvider
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
@@ -122,6 +123,10 @@ class ActivityMain : BaseActivity<ActivityMainBinding>(), BatteryReceiver.OnBatt
 
         binding.imgVF.setOnClickListener {
             pinWidget(WidgetCatViewFlipperProvider::class.java, 3)
+        }
+
+        binding.imgSchedule.setOnClickListener {
+            pinWidget(WidgetDailyImageProvider::class.java, 4)
         }
     }
 

@@ -194,40 +194,115 @@
         tools:src="@drawable/img_anime_girl" />
     <!---->
 
+    <!--    <ImageView-->
+    <!--        android:id="@+id/imgAnimatedReview"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="100dp"-->
+    <!--        android:scaleType="fitStart"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintTop_toBottomOf="@id/imgAnimated"-->
+    <!--        tools:src="@drawable/img_anime_girl" />-->
+
+
     <ImageView
-        android:id="@+id/imgAnimatedReview"
-        android:layout_width="wrap_content"
-        android:layout_height="100dp"
-        android:scaleType="fitStart"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/imgAnimated"
-        tools:src="@drawable/img_anime_girl" />
-    <!--ViewFlipper -->
-    <ViewFlipper
-        android:id="@+id/imgVF"
+        android:id="@+id/imgSchedule"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:background="@drawable/bg_radius_10dp"
-        android:clipToPadding="false"
-        android:padding="4dp"
+        android:scaleType="fitStart"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imgAnimated"
+        android:src="@drawable/img_cat_1" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="7h sáng đổi ảnh"
+        app:layout_constraintStart_toEndOf="@id/imgSchedule"
+        app:layout_constraintTop_toBottomOf="@id/imgAnimated" />
+
+    <!--ViewFlipper -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/imgVFContainer"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        app:cardCornerRadius="28dp"
+        app:cardElevation="0dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/imgAnimeGirl">
+        app:layout_constraintTop_toBottomOf="@id/imgAnimeGirl"
+        app:strokeColor="#00B1FF"
+        app:strokeWidth="2dp">
 
-        <ImageView
+        <ViewFlipper
+            android:id="@+id/imgVF"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/img_cat_1" />
+            android:autoStart="true"
+            android:flipInterval="700"
+            android:inAnimation="@android:anim/fade_in"
+            android:outAnimation="@android:anim/fade_out">
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/img_cat_2" />
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/img_cat_1" />
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/img_cat_3" />
-    </ViewFlipper>
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/img_cat_2" />
 
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/img_cat_3" />
+        </ViewFlipper>
+    </com.google.android.material.card.MaterialCardView>
+
+    <LinearLayout
+        android:id="@+id/rootMain"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:background="#111111"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Stack View"
+            android:textColor="#ffff" />
+
+        <ViewFlipper
+            android:id="@+id/previewFlipper"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:autoStart="true"
+            android:flipInterval="700">
+
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/img_cat_1" />
+
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/img_cat_2" />
+
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/img_cat_3" />
+        </ViewFlipper>
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

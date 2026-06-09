@@ -3,6 +3,7 @@ package com.example.baseapp.ui.page.main
 import android.Manifest
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
+import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -28,9 +29,8 @@ import com.example.baseapp.ui.base.BaseActivity
 import com.example.baseapp.ui.receiver.BatteryReceiver
 import com.example.baseapp.ui.service.WidgetUpdateService
 import com.example.baseapp.ui.widget.WidgetAnimatedProvider
-import com.example.baseapp.ui.widget.WidgetAnimatedReviewProvider
-import com.example.baseapp.ui.widget.WidgetAnimeGirlProvider
 import com.example.baseapp.ui.widget.WidgetCatProvider
+import com.example.baseapp.ui.widget.WidgetCatViewFlipperProvider
 import com.example.baseapp.ui.widget.WidgetPackProvider
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
@@ -92,10 +92,10 @@ class ActivityMain : BaseActivity<ActivityMainBinding>(), BatteryReceiver.OnBatt
             "https://candy-storage.s3.ap-southeast-1.amazonaws.com/themes/uploads/1c846501-5b64-4a37-ae25-32c76ad36150.png"
         )
 
-        loadAnimatedImage(
-            binding.imgAnimatedReview,
-            "https://candy-storage.s3.ap-southeast-1.amazonaws.com/themes/uploads/1c846501-5b64-4a37-ae25-32c76ad36150.png"
-        )
+//        loadAnimatedImage(
+//            binding.imgAnimatedReviews,
+//            "https://candy-storage.s3.ap-southeast-1.amazonaws.com/themes/uploads/1c846501-5b64-4a37-ae25-32c76ad36150.png"
+//        )
         startPreviewAnimation()
 
     }
@@ -104,20 +104,24 @@ class ActivityMain : BaseActivity<ActivityMainBinding>(), BatteryReceiver.OnBatt
     override fun initAction() {
         binding.cardPreview.setOnClickListener {
             saveWidgetBackgroundUrl()
-            pinWidget()
+            pinWidget(WidgetPackProvider::class.java)
         }
         binding.imgAnimeGirl.setOnClickListener {
-            pinAnimeGirl()
+            pinWidget(WidgetAnimatedProvider::class.java)
         }
 
         binding.widgetCat.setOnClickListener {
-            pinCat()
+            pinWidget(WidgetCatProvider::class.java)
         }
         binding.imgAnimated.setOnClickListener {
-            pinAnimated()
+            pinWidget(WidgetAnimatedProvider::class.java, 1)
         }
-        binding.imgAnimatedReview.setOnClickListener {
-            pinAnimatedReview()
+//        binding.imgAnimatedReview.setOnClickListener {
+//            pinAnimatedReview()
+//        }
+
+        binding.imgVF.setOnClickListener {
+            pinWidget(WidgetCatViewFlipperProvider::class.java, 3)
         }
     }
 
@@ -166,8 +170,7 @@ class ActivityMain : BaseActivity<ActivityMainBinding>(), BatteryReceiver.OnBatt
 
     private fun loadAnimatedImage(imageView: ImageView, url: String) {
 
-        Glide.with(this)
-            .load(url)
+        Glide.with(this).load(url)
             // glide-plugin của APNG4Android sẽ tự bắt APNG và render animation.
             .into(imageView)
     }
@@ -212,78 +215,32 @@ class ActivityMain : BaseActivity<ActivityMainBinding>(), BatteryReceiver.OnBatt
 
     // ─── Pin widget lên home screen ─────────────────────────────────────────────
 
-    private fun pinWidget() {
-        val appWidgetManager = AppWidgetManager.getInstance(this)
-        val provider = ComponentName(this, WidgetPackProvider::class.java)
-        if (appWidgetManager.isRequestPinAppWidgetSupported) {
-            val callbackIntent = Intent(
-                this, WidgetPackProvider::class.java
-            ).setAction(WidgetPackProvider.ACTION_PINNED)
-            val flags = PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-            val successCallback = PendingIntent.getBroadcast(this, 0, callbackIntent, flags)
-            appWidgetManager.requestPinAppWidget(provider, null, successCallback)
-        } else {
-            showToast("Launcher không hỗ trợ pin widget")
-        }
-    }
 
-    private fun pinAnimeGirl() {
+    private fun pinWidget(
+        providerClass: Class<out AppWidgetProvider>,
+        requestCode: Int = 0
+    ) {
         val appWidgetManager = AppWidgetManager.getInstance(this)
-        val provider = ComponentName(this, WidgetAnimeGirlProvider::class.java)
-        if (appWidgetManager.isRequestPinAppWidgetSupported) {
-            val callbackIntent =
-                Intent(this, WidgetAnimeGirlProvider::class.java).setAction(Constants.ACTION_PINNED)
-            val flags = PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-            val successCallback = PendingIntent.getBroadcast(this, 0, callbackIntent, flags)
-            appWidgetManager.requestPinAppWidget(provider, null, successCallback)
-        } else {
+        if (!appWidgetManager.isRequestPinAppWidgetSupported) {
             showToast("Launcher không hỗ trợ pin widget")
+            return
         }
-    }
-
-    private fun pinAnimated() {
-        val appWidgetManager = AppWidgetManager.getInstance(this)
-        val provider = ComponentName(this, WidgetAnimatedProvider::class.java)
-        if (appWidgetManager.isRequestPinAppWidgetSupported) {
-            val callbackIntent =
-                Intent(this, WidgetAnimatedProvider::class.java).setAction(Constants.ACTION_PINNED)
-            val flags = PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-            val successCallback = PendingIntent.getBroadcast(this, 0, callbackIntent, flags)
-            appWidgetManager.requestPinAppWidget(provider, null, successCallback)
-        } else {
-            showToast("Launcher không hỗ trợ pin widget")
+        val provider = ComponentName(this, providerClass)
+        val callbackIntent = Intent(this, providerClass).apply {
+            action = Constants.ACTION_PINNED
         }
-    }
-
-    private fun pinAnimatedReview() {
-        val appWidgetManager = AppWidgetManager.getInstance(this)
-        val provider = ComponentName(this, WidgetAnimatedReviewProvider::class.java)
-        if (appWidgetManager.isRequestPinAppWidgetSupported) {
-            val callbackIntent =
-                Intent(
-                    this,
-                    WidgetAnimatedReviewProvider::class.java
-                ).setAction(Constants.ACTION_PINNED)
-            val flags = PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-            val successCallback = PendingIntent.getBroadcast(this, 0, callbackIntent, flags)
-            appWidgetManager.requestPinAppWidget(provider, null, successCallback)
-        } else {
-            showToast("Launcher không hỗ trợ pin widget")
-        }
-    }
-
-    private fun pinCat() {
-        val appWidgetManager = AppWidgetManager.getInstance(this)
-        val provider = ComponentName(this, WidgetCatProvider::class.java)
-        if (appWidgetManager.isRequestPinAppWidgetSupported) {
-            val callbackIntent =
-                Intent(this, WidgetCatProvider::class.java).setAction(Constants.ACTION_PINNED)
-            val flags = PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-            val successCallback = PendingIntent.getBroadcast(this, 0, callbackIntent, flags)
-            appWidgetManager.requestPinAppWidget(provider, null, successCallback)
-        } else {
-            showToast("Launcher không hỗ trợ pin widget")
-        }
+        val flags = PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        val successCallback = PendingIntent.getBroadcast(
+            this,
+            requestCode,
+            callbackIntent,
+            flags
+        )
+        appWidgetManager.requestPinAppWidget(
+            provider,
+            null,
+            successCallback
+        )
     }
 
     // ─── Cập nhật pin thực (lần đầu mở Activity) ───────

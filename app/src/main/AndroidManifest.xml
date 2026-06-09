@@ -27,6 +27,31 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <!--view flipper để chuyển động hình ảnh -->
+        <receiver
+            android:name=".ui.widget.WidgetCatViewFlipperProvider"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.example.baseapp.widget.ACTION_PINNED" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_cat_view_flipper" />
+        </receiver>
+
+        <!--        widget preview -->
+        <receiver
+            android:name=".ui.widget.WidgetAnimatedReviewProvider"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.example.baseapp.widget.ACTION_PINNED" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_animated_review" />
+        </receiver>
 
         <!-- Widget Provider: Anime Girl -->
         <receiver
@@ -88,6 +113,7 @@
                 android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
                 android:value="Update battery widget realtime" />
         </service>
+
 
         <!-- Receiver tự động khởi động Service khi bật máy -->
         <receiver

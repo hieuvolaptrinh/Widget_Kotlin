@@ -192,15 +192,42 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imgAnimeGirl"
         tools:src="@drawable/img_anime_girl" />
-
-    <!--    thêm một widget nữa để luyện trình độ -->
+    <!---->
 
     <ImageView
         android:id="@+id/imgAnimatedReview"
-        android:layout_width="100dp"
-        android:layout_height="200dp"
-        android:scaleType="centerCrop"
+        android:layout_width="wrap_content"
+        android:layout_height="100dp"
+        android:scaleType="fitStart"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/imgAnimeGirl"
+        app:layout_constraintTop_toBottomOf="@id/imgAnimated"
         tools:src="@drawable/img_anime_girl" />
+    <!--ViewFlipper -->
+    <ViewFlipper
+        android:id="@+id/imgVF"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:background="@drawable/bg_radius_10dp"
+        android:clipToPadding="false"
+        android:padding="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imgAnimeGirl">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/img_cat_1" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/img_cat_2" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/img_cat_3" />
+    </ViewFlipper>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

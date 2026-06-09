@@ -16,7 +16,6 @@ import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import com.example.baseapp.ui.receiver.BatteryReceiver
 import com.example.baseapp.ui.widget.WidgetAnimatedProvider
-import com.example.baseapp.ui.widget.WidgetAnimatedReviewProvider
 import com.example.baseapp.ui.widget.WidgetCatProvider
 import com.example.baseapp.ui.widget.WidgetPackProvider
 
@@ -105,15 +104,13 @@ class WidgetUpdateService : Service() {
             WidgetCatProvider.startScheduler(this)
         }
 
-        if (hasWidget(WidgetAnimatedReviewProvider::class.java)) {
-            WidgetAnimatedReviewProvider.startScheduler(this)
-        }
+
     }
 
     private fun stopSchedulers() {
         WidgetAnimatedProvider.stopScheduler()
         WidgetCatProvider.stopScheduler()
-        WidgetAnimatedReviewProvider.stopScheduler()
+
     }
 
     private fun hasWidget(providerClass: Class<out AppWidgetProvider>): Boolean {

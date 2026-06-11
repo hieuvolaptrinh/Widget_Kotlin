@@ -262,11 +262,12 @@
     </com.google.android.material.card.MaterialCardView>
 
     <LinearLayout
-        android:id="@+id/rootMain"
+        android:id="@+id/cardStackView"
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:background="#111111"
         android:gravity="center"
+        android:elevation="2dp"
         android:orientation="vertical"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -283,6 +284,8 @@
             android:layout_height="100dp"
             android:layout_gravity="center"
             android:autoStart="true"
+            android:outAnimation="@anim/bottom_slide"
+            android:inAnimation="@anim/up_slide"
             android:flipInterval="700">
 
             <ImageView

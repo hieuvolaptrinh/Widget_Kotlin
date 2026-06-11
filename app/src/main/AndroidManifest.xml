@@ -113,12 +113,35 @@
                 android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
                 android:value="Update battery widget realtime" />
         </service>
+        <!--        stack view cho các ảnh mình có thể tương tác và chỉnh sửa bằng tay-->
+        <receiver
+            android:name=".ui.widget.WidgetCatStackProvider"
+            android:exported="true">
+
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_cat_stack" />
+
+        </receiver>
+
+        <service
+            android:name=".ui.service.CatStackWidgetService"
+            android:exported="false"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+
         <!--7h sáng hằng ngày -->
         <receiver
             android:name=".ui.widget.WidgetDailyImageProvider"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="android.intent.action.TIME_SET" />
+                <action android:name="android.intent.action.DATE_CHANGED" />
+                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
             </intent-filter>
 
             <meta-data

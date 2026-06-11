@@ -30,6 +30,7 @@ import com.example.baseapp.ui.receiver.BatteryReceiver
 import com.example.baseapp.ui.service.WidgetUpdateService
 import com.example.baseapp.ui.widget.WidgetAnimatedProvider
 import com.example.baseapp.ui.widget.WidgetCatProvider
+import com.example.baseapp.ui.widget.WidgetCatStackProvider
 import com.example.baseapp.ui.widget.WidgetCatViewFlipperProvider
 import com.example.baseapp.ui.widget.WidgetDailyImageProvider
 import com.example.baseapp.ui.widget.WidgetPackProvider
@@ -128,22 +129,19 @@ class ActivityMain : BaseActivity<ActivityMainBinding>(), BatteryReceiver.OnBatt
         binding.imgSchedule.setOnClickListener {
             pinWidget(WidgetDailyImageProvider::class.java, 4)
         }
+        binding.cardStackView.setOnClickListener {
+            pinWidget(WidgetCatStackProvider::class.java, 5)
+        }
     }
 
 
     private fun startPreviewAnimation() {
-
         previewJob?.cancel()
-
         previewJob = lifecycleScope.launch {
-
             while (true) {
-
                 Glide.with(this@ActivityMain).load(previewCatJob[currentIndex]).centerCrop()
                     .into(binding.imgCat)
-
                 currentIndex = (currentIndex + 1) % previewCatJob.size
-
                 delay(1000)
             }
         }
@@ -157,7 +155,6 @@ class ActivityMain : BaseActivity<ActivityMainBinding>(), BatteryReceiver.OnBatt
                     Log.e("WidgetPack", "Error: ${result.message} (code=${result.code})")
                     showToast(result.message)
                 }
-
                 is Resource.Success -> {
                     currentPack = result.data
                     Log.d(

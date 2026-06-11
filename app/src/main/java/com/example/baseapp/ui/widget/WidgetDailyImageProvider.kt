@@ -4,11 +4,12 @@ import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
 import android.content.Context
+import android.content.Intent
+import android.util.Log
 import android.widget.RemoteViews
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
-import com.example.baseapp.BuildConfig
 import com.example.baseapp.R
 import com.example.baseapp.ui.worker.DailyImageWidgetWorker
 import java.time.Duration
@@ -18,6 +19,14 @@ import java.util.concurrent.TimeUnit
 import kotlin.random.Random
 
 class WidgetDailyImageProvider : AppWidgetProvider() {
+    override fun onReceive(context: Context, intent: Intent) {
+        super.onReceive(context, intent)
+
+        if (intent.action in timeChangedActions) {
+            schedule(context.applicationContext)
+        }
+    }
+
     override fun onEnabled(context: Context) {
         super.onEnabled(context)
 
@@ -52,7 +61,6 @@ class WidgetDailyImageProvider : AppWidgetProvider() {
         private const val KEY_IMAGE_RES = "image_res"
         private const val UPDATE_HOUR = 16
         private const val UPDATE_MINUTE = 35
-        private const val TEST_REPEAT_MINUTES = 15L
 
         private val images = intArrayOf(
             R.drawable.img_cat_1,
@@ -60,20 +68,18 @@ class WidgetDailyImageProvider : AppWidgetProvider() {
             R.drawable.img_cat_3
         )
 
-        fun schedule(context: Context) {
-            val repeatInterval = if (BuildConfig.DEBUG) TEST_REPEAT_MINUTES else 1L
-            val repeatUnit = if (BuildConfig.DEBUG) TimeUnit.MINUTES else TimeUnit.DAYS
-            val initialDelayMillis = if (BuildConfig.DEBUG) {
-                0L
-            } else {
-                calculateInitialDelayMillis()
-            }
+        private val timeChangedActions = setOf(
+            Intent.ACTION_TIME_CHANGED,
+            Intent.ACTION_DATE_CHANGED,
+            Intent.ACTION_TIMEZONE_CHANGED
+        )
 
+        fun schedule(context: Context) {
             val request = PeriodicWorkRequestBuilder<DailyImageWidgetWorker>(
-                repeatInterval,
-                repeatUnit
+                1,
+                TimeUnit.DAYS
             )
-                .setInitialDelay(initialDelayMillis, TimeUnit.MILLISECONDS)
+                .setInitialDelay(calculateInitialDelayMillis(), TimeUnit.MILLISECONDS)
                 .build()
 
             WorkManager.getInstance(context).enqueueUniquePeriodicWork(
@@ -81,6 +87,7 @@ class WidgetDailyImageProvider : AppWidgetProvider() {
                 ExistingPeriodicWorkPolicy.UPDATE,
                 request
             )
+            Log.d("Scheduler", "thay đổi lịch")
         }
 
         fun cancel(context: Context) {
@@ -96,9 +103,10 @@ class WidgetDailyImageProvider : AppWidgetProvider() {
             }
 
             return Duration.between(now, nextRun).toMillis()
+
         }
 
-        fun updateAll(context: Context, randomNewImage: Boolean = true) {
+        fun updateAll(context: Context, randomNewImage: Boolean = false) {
             val appWidgetManager = AppWidgetManager.getInstance(context)
             val componentName = ComponentName(
                 context,
@@ -118,6 +126,7 @@ class WidgetDailyImageProvider : AppWidgetProvider() {
             )
             views.setImageViewResource(R.id.imgDaily, imageRes)
             appWidgetManager.updateAppWidget(widgetIds, views)
+            Log.d("Widget", "update new img")
         }
 
         private fun getCurrentImage(context: Context): Int {

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rootItem"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_stack_card"
+    android:padding="2dp">
+
+    <ImageView
+        android:id="@+id/imgCatStack"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0.85"
+        android:scaleType="centerCrop" />
+
+    <LinearLayout
+        android:id="@+id/textContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginHorizontal="10dp"
+        android:background="@drawable/bg_stack_text_overlay"
+        android:orientation="vertical"
+        android:layout_marginBottom="10dp"
+        android:padding="2dp">
+
+        <TextView
+            android:id="@+id/tvTitleStack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:maxLines="1"
+            android:text="Tiêu đề"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvSubtitleStack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="2dp"
+            android:maxLines="2"
+            android:text=" Chi Tiết"
+            android:textColor="#DDDDDD"
+            android:textSize="10sp" />
+
+    </LinearLayout>
+
+</FrameLayout>
